@@ -1,7 +1,7 @@
-import 'package:flutter/material.dart';
+/*import 'package:flutter/material.dart';
 
 class Authorization extends StatefulWidget {
-  Authorization({Key? key}) : super(key: key);
+  const Authorization({Key? key}) : super(key: key);
 
   @override
   State<Authorization> createState() => _AuthorizationState();
@@ -17,17 +17,13 @@ class _AuthorizationState extends State<Authorization> {
   @override
   Widget build(BuildContext context) {
     Widget _logo() {
-      return Padding(
+      return const Padding(
         padding: EdgeInsets.only(top: 100),
-        child: Container(
-          child: Align(
-            child: const Text(
-              'RS-booking',
-              style: TextStyle(
-                  fontSize: 45,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white),
-            ),
+        child: Align(
+          child: Text(
+            'RS-booking',
+            style: TextStyle(
+                fontSize: 45, fontWeight: FontWeight.bold, color: Colors.white),
           ),
         ),
       );
@@ -84,31 +80,29 @@ class _AuthorizationState extends State<Authorization> {
     }
 
     Widget _form(String label, void Function() func) {
-      return Container(
-        child: Column(children: <Widget>[
-          Padding(
-            padding: const EdgeInsets.only(bottom: 20, top: 10),
-            child: _input(
-                const Icon(Icons.email), "Email", _emailController, false),
+      return Column(children: <Widget>[
+        Padding(
+          padding: const EdgeInsets.only(bottom: 20, top: 10),
+          child:
+              _input(const Icon(Icons.email), "Email", _emailController, false),
+        ),
+        Padding(
+          padding: const EdgeInsets.only(bottom: 20, top: 10),
+          child: _input(
+              const Icon(Icons.lock), "Пароль", _passwordController, true),
+        ),
+        const SizedBox(
+          height: 20,
+        ),
+        Padding(
+          padding: const EdgeInsets.only(left: 20, right: 20),
+          child: SizedBox(
+            height: 50,
+            width: MediaQuery.of(context).size.width,
+            child: _button(label, func),
           ),
-          Padding(
-            padding: const EdgeInsets.only(bottom: 20, top: 10),
-            child: _input(
-                const Icon(Icons.lock), "Пароль", _passwordController, true),
-          ),
-          const SizedBox(
-            height: 20,
-          ),
-          Padding(
-            padding: const EdgeInsets.only(left: 20, right: 20),
-            child: Container(
-              height: 50,
-              width: MediaQuery.of(context).size.width,
-              child: _button(label, func),
-            ),
-          ),
-        ]),
-      );
+        ),
+      ]);
     }
 
     void _loginUser() {
@@ -122,14 +116,14 @@ class _AuthorizationState extends State<Authorization> {
     Widget _bottomWave() {
       return Expanded(
         child: Align(
+          alignment: Alignment.bottomCenter,
           child: ClipPath(
+            clipper: BottomWaveClipper(),
             child: Container(
               color: Colors.white,
               height: 300,
             ),
-            clipper: BottomWaveClipper(),
           ),
-          alignment: Alignment.bottomCenter,
         ),
       );
     }
@@ -147,7 +141,7 @@ class _AuthorizationState extends State<Authorization> {
                   children: <Widget>[
                     _form('Войти', _loginUser),
                     Padding(
-                      padding: EdgeInsets.all(10),
+                      padding: const EdgeInsets.all(10),
                       child: GestureDetector(
                         child: const Text(
                             'Ещё не зарегистрированы? Сделайте это сейчас!',
@@ -166,7 +160,7 @@ class _AuthorizationState extends State<Authorization> {
                   children: <Widget>[
                     _form('Регистрация', _loginUser),
                     Padding(
-                      padding: EdgeInsets.all(10),
+                      padding: const EdgeInsets.all(10),
                       child: GestureDetector(
                         child: const Text(
                             'Уже зарегистрированы? Просто войдите!',
@@ -206,3 +200,4 @@ class BottomWaveClipper extends CustomClipper<Path> {
   @override
   bool shouldReclip(CustomClipper<Path> oldClipper) => false;
 }
+*/
