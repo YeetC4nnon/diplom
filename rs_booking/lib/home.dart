@@ -1,10 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:rs_booking/services/models.dart';
-import 'package:rs_booking/widgets/list_status_indicator.dart';
-import 'services/list_controller.dart';
-import 'package:provider/provider.dart';
-import 'package:rs_booking/services/repository.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -16,10 +12,6 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
-    //final listController = context.watch<ListController>();
-    //final listState = listController.value;
-    //final itemCount = listState.studios.length +
-    //    (ListStatusIndicator.hasStatus(listState) ? 1 : 0);
     return Scaffold(
       appBar: AppBar(title: const Text("Главная")),
       backgroundColor: const Color.fromRGBO(50, 65, 85, 1),
@@ -27,10 +19,9 @@ class _HomePageState extends State<HomePage> {
         stream: studios(),
         builder: (context, snapshot) {
           if (snapshot.hasError) {
-            return const Text('I haave a bad feeling about this');
+            return const Text('I have a bad feeling about this');
           } else if (snapshot.hasData) {
             final studios = snapshot.data!;
-
             return ListView(
               children: studios.map(buildStudio).toList(),
             );
@@ -51,23 +42,26 @@ Stream<List<Studio>> studios() => FirebaseFirestore.instance
     .map((snapshot) =>
         snapshot.docs.map((doc) => Studio.fromJson(doc.data())).toList());
 
-Widget buildStudio(Studio studio) => ListTile(
-      title: Text(studio.title),
+Widget buildStudio(Studio studio) => Card(
+      elevation: 1,
+      color: const Color.fromRGBO(60, 65, 85, 1),
+      child: ListTile(
+        textColor: Colors.white,
+        leading: const Icon(
+          Icons.audiotrack_rounded,
+          color: Colors.white,
+        ),
+        title: Text(
+          studio.title,
+          style: const TextStyle(
+            fontSize: 20,
+          ),
+        ),
+        subtitle: Text(
+          "Цена за 1 час: ${studio.sum} руб.",
+          style: const TextStyle(
+            fontSize: 12,
+          ),
+        ),
+      ),
     );
-/*ListView.builder(
-        itemBuilder: (context, index) {
-          if (index == listState.studios.length &&
-              ListStatusIndicator.hasStatus(listState)) {
-            return ListStatusIndicator(listState,
-                onRepeat: listController.repeatQuery);
-          }
-
-          final record = listState.studios[index];
-          return ListTile(
-            title: Text(record.title),
-            tileColor: const Color.fromRGBO(50, 65, 85, 0.8),
-            textColor: Colors.white,
-          );
-        },
-        itemCount: itemCount,
-      ),*/

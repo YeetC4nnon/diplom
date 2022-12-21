@@ -1,4 +1,4 @@
-/*import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 
 class Authorization extends StatefulWidget {
   const Authorization({Key? key}) : super(key: key);
@@ -62,10 +62,7 @@ class _AuthorizationState extends State<Authorization> {
     }
 
     Widget _button(String text, void Function() func) {
-      return RaisedButton(
-        splashColor: Theme.of(context).primaryColor,
-        highlightColor: Theme.of(context).primaryColor,
-        color: Colors.white,
+      return ElevatedButton(
         child: Text(
           text,
           style: TextStyle(
@@ -200,4 +197,3 @@ class BottomWaveClipper extends CustomClipper<Path> {
   @override
   bool shouldReclip(CustomClipper<Path> oldClipper) => false;
 }
-*/
