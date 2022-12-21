@@ -3,7 +3,6 @@ import 'package:rs_booking/home.dart';
 import 'package:provider/provider.dart';
 import 'package:rs_booking/services/list_controller.dart';
 import 'package:firebase_core/firebase_core.dart';
-import '../firebase_options.dart';
 
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
