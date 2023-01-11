@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:rs_booking/firebase_options.dart';
-import 'package:rs_booking/home.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:rs_booking/routes/route_generator.dart';
 
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -18,7 +18,8 @@ class rs_booking extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'RS-booking',
-      home: const HomePage(),
+      initialRoute: '/',
+      onGenerateRoute: RouteGenerator.generateRoute,
       theme: ThemeData(
         primaryColor: const Color.fromRGBO(50, 65, 85, 1),
       ),

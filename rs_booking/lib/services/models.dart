@@ -1,15 +1,18 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+
+var isUser = FirebaseAuth.instance.currentUser?.uid;
 
 class Studio {
   late String title;
-  var sum;
+  var min_cost;
   late String address;
   late String description;
   var id;
 
   Studio({
     required this.title,
-    required this.sum,
+    required this.min_cost,
     required this.address,
     this.description = '',
     required this.id,
@@ -17,7 +20,7 @@ class Studio {
 
   Map<String, dynamic> toJson() => {
         'title': title,
-        'sum': sum,
+        'min_cost': min_cost,
         'address': address,
         'description': description,
         'id': id,
@@ -25,7 +28,7 @@ class Studio {
 
   static Studio fromJson(Map<String, dynamic> json) => Studio(
         title: json['title'],
-        sum: json['sum'],
+        min_cost: json['min_cost'],
         address: json['address'],
         description: json['description'],
         id: json['id'],
