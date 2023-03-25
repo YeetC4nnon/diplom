@@ -24,13 +24,13 @@ class _HomePageState extends State<HomePage> {
         builder: (context, snapshot) {
           Map<String, dynamic>? data;
           data = snapshot.data?.data() as Map<String, dynamic>?;
+          int? dataLength = data?.length;
           if (snapshot.hasError) {
-            return const Text('I have a bad feeling about this');
+            return Text(snapshot.error.toString());
           } else if (snapshot.hasData) {
             return ListView.builder(
-              itemCount: 2,
+              itemCount: dataLength,
               itemBuilder: (BuildContext context, int index) {
-                //studios.map(buildStudio).toList();
                 return Card(
                   elevation: 1,
                   color: const Color.fromRGBO(60, 65, 85, 1),
@@ -55,7 +55,7 @@ class _HomePageState extends State<HomePage> {
                     onTap: (() {
                       Navigator.of(context).pushNamed(
                         '/recordPage',
-                        arguments: data,
+                        arguments: snapshot.data!.id,
                       );
                     }),
                   ),
@@ -73,41 +73,5 @@ class _HomePageState extends State<HomePage> {
   }
 }
 
-Stream<DocumentSnapshot> studios() => FirebaseFirestore.instance
-    .collection('studios')
-    .doc('U3imVeOROUULWOICBezC')
-    .snapshots();
-
-dynamic buildStudio(Studio studio, BuildContext context) => Card(
-      elevation: 1,
-      color: const Color.fromRGBO(60, 65, 85, 1),
-      child: ListTile(
-        textColor: Colors.white,
-        leading: const Icon(
-          Icons.audiotrack_rounded,
-          color: Colors.white,
-        ),
-        title: Text(
-          studio.title,
-          style: const TextStyle(
-            fontSize: 20,
-          ),
-        ),
-        subtitle: Text(
-          "От: ${studio.min_cost} руб.",
-          style: const TextStyle(
-            fontSize: 12,
-          ),
-        ),
-        onTap: (() {
-          Navigator.of(context).pushNamed(
-            'recordPage',
-            arguments: studio,
-          );
-        }),
-      ),
-    );
-
-/*void sendStudioDoc() {
-  FirebaseFirestore.instance.collection('studio').doc().id;
-}*/
+Stream<DocumentSnapshot> studios() =>
+    FirebaseFirestore.instance.collection('studios').doc(isUser).snapshots();

@@ -18,7 +18,7 @@ class rs_booking extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'RS-booking',
-      initialRoute: '/',
+      initialRoute: '/auth',
       onGenerateRoute: RouteGenerator.generateRoute,
       theme: ThemeData(
         primaryColor: const Color.fromRGBO(50, 65, 85, 1),

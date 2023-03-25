@@ -1,6 +1,7 @@
 {
   "project_info": {
     "project_number": "581031532310",
+    "firebase_url": "https://rs-booking-default-rtdb.firebaseio.com",
     "project_id": "rs-booking",
     "storage_bucket": "rs-booking.appspot.com"
   },
@@ -29,6 +30,13 @@
             {
               "client_id": "581031532310-j1i64jasjrmr6qr564rimsrpb4sb65gr.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "581031532310-jc5fr7ed8rp3hr0d22nagvt2hoch40ht.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.rsBooking"
+              }
             }
           ]
         }

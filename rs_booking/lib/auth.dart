@@ -1,4 +1,10 @@
+// ignore_for_file: no_leading_underscores_for_local_identifiers, unused_element
+
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:rs_booking/services/models.dart';
+import 'package:rs_booking/services/snack_bar.dart';
 
 class Authorization extends StatefulWidget {
   const Authorization({Key? key}) : super(key: key);
@@ -8,11 +14,16 @@ class Authorization extends StatefulWidget {
 }
 
 class _AuthorizationState extends State<Authorization> {
+  final TextEditingController _idController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _nameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  late int _id;
   late String _email;
+  late String _name;
   late String _password;
   bool showLogin = true;
+  final formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
@@ -61,7 +72,69 @@ class _AuthorizationState extends State<Authorization> {
       );
     }
 
-    Widget _button(String text, void Function() func) {
+    Future createUser(thisUser user) async {
+      final DocumentReference docUser =
+          FirebaseFirestore.instance.collection('users').doc();
+
+      final json = user.toJson();
+
+      docUser.set(json);
+    }
+
+    Widget _registerButton(String text, void Function() func) {
+      return ElevatedButton(
+        onPressed: () {
+          final user = thisUser(
+            email: _email,
+            password: _password,
+            name: _name,
+            id: _id,
+          );
+          createUser(user);
+
+          final navigator = Navigator.of(context);
+
+          final isValid = formKey.currentState!.validate();
+          if (!isValid) return;
+
+          try {
+            FirebaseAuth.instance.createUserWithEmailAndPassword(
+              email: _emailController.text.trim(),
+              password: _passwordController.text.trim(),
+            );
+          } on FirebaseAuthException catch (e) {
+            print(e.code);
+
+            if (e.code == 'user-not-found' || e.code == 'wrong-password') {
+              SnackBarService.showSnackBar(
+                context,
+                'Неправильный email или пароль. Повторите попытку',
+                true,
+              );
+              return;
+            } else {
+              SnackBarService.showSnackBar(
+                context,
+                'Неизвестная ошибка! Попробуйте еще раз или обратитесь в поддержку.',
+                true,
+              );
+              return;
+            }
+          }
+          navigator.pushNamedAndRemoveUntil(
+              '/', (Route<dynamic> route) => false);
+        },
+        child: Text(
+          text,
+          style: TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 20,
+              color: Theme.of(context).primaryColor),
+        ),
+      );
+    }
+
+    Widget _loginButton(String text, void Function() func) {
       return ElevatedButton(
         child: Text(
           text,
@@ -71,12 +144,73 @@ class _AuthorizationState extends State<Authorization> {
               color: Theme.of(context).primaryColor),
         ),
         onPressed: () {
-          func();
+          final navigator = Navigator.of(context);
+
+          //final isValid = formKey.currentState!.validate();
+          //if (!isValid) return;
+
+          try {
+            FirebaseAuth.instance.signInWithEmailAndPassword(
+              email: _emailController.text.trim(),
+              password: _passwordController.text.trim(),
+            );
+          } on FirebaseAuthException catch (e) {
+            print(e.code);
+
+            if (e.code == 'user-not-found' || e.code == 'wrong-password') {
+              SnackBarService.showSnackBar(
+                context,
+                'Неправильный email или пароль. Повторите попытку',
+                true,
+              );
+              return;
+            } else {
+              SnackBarService.showSnackBar(
+                context,
+                'Неизвестная ошибка! Попробуйте еще раз или обратитесь в поддержку.',
+                true,
+              );
+              return;
+            }
+          }
+
+          navigator.pushNamedAndRemoveUntil(
+              '/', (Route<dynamic> route) => false);
         },
       );
     }
 
-    Widget _form(String label, void Function() func) {
+    Widget _registerForm(String label, void Function() func) {
+      return Column(children: <Widget>[
+        Padding(
+          padding: const EdgeInsets.only(bottom: 20, top: 10),
+          child:
+              _input(const Icon(Icons.email), "Email", _emailController, false),
+        ),
+        Padding(
+          padding: const EdgeInsets.only(bottom: 20, top: 10),
+          child: _input(const Icon(Icons.man), "Имя", _nameController, false),
+        ),
+        Padding(
+          padding: const EdgeInsets.only(bottom: 20, top: 10),
+          child: _input(
+              const Icon(Icons.lock), "Пароль", _passwordController, true),
+        ),
+        const SizedBox(
+          height: 20,
+        ),
+        Padding(
+          padding: const EdgeInsets.only(left: 20, right: 20),
+          child: SizedBox(
+            height: 50,
+            width: MediaQuery.of(context).size.width,
+            child: _registerButton(label, func),
+          ),
+        ),
+      ]);
+    }
+
+    Widget _loginForm(String label, void Function() func) {
       return Column(children: <Widget>[
         Padding(
           padding: const EdgeInsets.only(bottom: 20, top: 10),
@@ -96,18 +230,86 @@ class _AuthorizationState extends State<Authorization> {
           child: SizedBox(
             height: 50,
             width: MediaQuery.of(context).size.width,
-            child: _button(label, func),
+            child: _loginButton(label, func),
           ),
         ),
       ]);
     }
 
-    void _loginUser() {
-      _email = _emailController.text;
-      _password = _passwordController.text;
+    @override
+    void dispose() {
+      _emailController.dispose();
+      _passwordController.dispose();
 
-      _emailController.clear();
-      _passwordController.clear();
+      super.dispose();
+    }
+
+    Future<void> _loginUser() async {
+      final navigator = Navigator.of(context);
+
+      final isValid = formKey.currentState!.validate();
+      if (!isValid) return;
+
+      try {
+        await FirebaseAuth.instance.signInWithEmailAndPassword(
+          email: _emailController.text.trim(),
+          password: _passwordController.text.trim(),
+        );
+      } on FirebaseAuthException catch (e) {
+        print(e.code);
+
+        if (e.code == 'user-not-found' || e.code == 'wrong-password') {
+          SnackBarService.showSnackBar(
+            context,
+            'Неправильный email или пароль. Повторите попытку',
+            true,
+          );
+          return;
+        } else {
+          SnackBarService.showSnackBar(
+            context,
+            'Неизвестная ошибка! Попробуйте еще раз или обратитесь в поддержку.',
+            true,
+          );
+          return;
+        }
+      }
+
+      navigator.pushNamedAndRemoveUntil('/', (Route<dynamic> route) => false);
+    }
+
+    Future<void> _registerUser() async {
+      final navigator = Navigator.of(context);
+
+      final isValid = formKey.currentState!.validate();
+      if (!isValid) return;
+
+      try {
+        await FirebaseAuth.instance.createUserWithEmailAndPassword(
+          email: _emailController.text.trim(),
+          password: _passwordController.text.trim(),
+        );
+      } on FirebaseAuthException catch (e) {
+        print(e.code);
+
+        if (e.code == 'user-not-found' || e.code == 'wrong-password') {
+          SnackBarService.showSnackBar(
+            context,
+            'Неправильный email или пароль. Повторите попытку',
+            true,
+          );
+          return;
+        } else {
+          SnackBarService.showSnackBar(
+            context,
+            'Неизвестная ошибка! Попробуйте еще раз или обратитесь в поддержку.',
+            true,
+          );
+          return;
+        }
+      }
+
+      navigator.pushNamedAndRemoveUntil('/', (Route<dynamic> route) => false);
     }
 
     Widget _bottomWave() {
@@ -136,7 +338,7 @@ class _AuthorizationState extends State<Authorization> {
           (showLogin
               ? Column(
                   children: <Widget>[
-                    _form('Войти', _loginUser),
+                    _loginForm('Войти', _loginUser),
                     Padding(
                       padding: const EdgeInsets.all(10),
                       child: GestureDetector(
@@ -155,7 +357,7 @@ class _AuthorizationState extends State<Authorization> {
                 )
               : Column(
                   children: <Widget>[
-                    _form('Регистрация', _loginUser),
+                    _registerForm('Регистрация', _registerUser),
                     Padding(
                       padding: const EdgeInsets.all(10),
                       child: GestureDetector(

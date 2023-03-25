@@ -1,4 +1,5 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
+// ignore_for_file: camel_case_types, prefer_typing_uninitialized_variables, non_constant_identifier_names
+
 import 'package:firebase_auth/firebase_auth.dart';
 
 var isUser = FirebaseAuth.instance.currentUser?.uid;
@@ -35,13 +36,13 @@ class Studio {
       );
 }
 
-class User {
+class thisUser {
   late String name;
   late String email;
   late String password;
   var id;
 
-  User({
+  thisUser({
     required this.email,
     required this.password,
     required this.name,
@@ -55,7 +56,7 @@ class User {
         'id': id,
       };
 
-  static User fromJson(Map<String, dynamic> json) => User(
+  static thisUser fromJson(Map<String, dynamic> json) => thisUser(
         name: json['name'],
         email: json['email'],
         password: json['password'],

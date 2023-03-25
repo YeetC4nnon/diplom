@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:rs_booking/auth.dart';
 import 'package:rs_booking/home.dart';
 import 'package:rs_booking/record.dart';
 
@@ -9,6 +10,8 @@ class RouteGenerator {
     switch (settings.name) {
       case '/':
         return MaterialPageRoute(builder: (_) => const HomePage());
+      case '/auth':
+        return MaterialPageRoute(builder: (_) => const Authorization());
       case '/recordPage':
         if (args is Map<String, dynamic>) {
           return MaterialPageRoute(

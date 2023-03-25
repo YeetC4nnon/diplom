@@ -36,7 +36,7 @@ class _RecordPageState extends State<RecordPage> {
           StreamBuilder<DocumentSnapshot>(
             stream: FirebaseFirestore.instance
                 .collection('studios')
-                .doc('U3imVeOROUULWOICBezC')
+                .doc(isUser)
                 .snapshots(),
             builder: (context, snapshot) {
               Map<String, dynamic>? data;
@@ -78,14 +78,14 @@ class _RecordPageState extends State<RecordPage> {
           StreamBuilder<DocumentSnapshot>(
             stream: FirebaseFirestore.instance
                 .collection('users')
-                .doc('fq4BA7YWmgKCoVKPSiIw')
+                .doc(isUser)
                 .snapshots(),
             builder: (context, snapshot) {
               Map<String, dynamic>? data;
               data = snapshot.data?.data() as Map<String, dynamic>?;
               if (snapshot.hasError) {
                 return const Text('I have a bad feeling about this');
-              } else if (snapshot.hasData) {
+              } else if (snapshot.connectionState == ConnectionState.done) {
                 return Card(
                   elevation: 1,
                   color: const Color.fromRGBO(60, 65, 85, 1),
@@ -189,88 +189,6 @@ Stream<List<Studio>> studios() => FirebaseFirestore.instance
     .map((snapshot) =>
         snapshot.docs.map((doc) => Studio.fromJson(doc.data())).toList());
 
-Stream<List<User>> users() =>
+Stream<List<thisUser>> users() =>
     FirebaseFirestore.instance.collection('users').snapshots().map((snapshot) =>
-        snapshot.docs.map((doc) => User.fromJson(doc.data())).toList());
-
-/*body: Container(
-        child: StreamBuilder<DocumentSnapshot>(
-          stream: FirebaseFirestore.instance
-              .collection('studios')
-              .doc(isUser)
-              .snapshots(),
-          builder: (context, snapshot) {
-            Map<String, dynamic>? data;
-            data = snapshot.data?.data() as Map<String, dynamic>?;
-            return Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                Expanded(
-                  child: StreamBuilder(
-                    stream: getStudios(doc),
-                    builder: (BuildContext context, AsyncSnapshot snapshot) {
-                      if (ConnectionState.done == snapshot.connectionState) {
-                        return Column(
-                          crossAxisAlignment: CrossAxisAlignment.stretch,
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Column(
-                              children: [
-                                //
-                              ],
-                            ),
-                          ],
-                        );
-                      }
-                      return Text(doc);
-                    },
-                  ),
-                ),
-              ],
-            );
-          },
-        ),
-      ),*/
-
-/*body: StreamBuilder<DocumentSnapshot>(
-        stream: FirebaseFirestore.instance
-            .collection('studios')
-            .doc('U3imVeOROUULWOICBezC')
-            .snapshots(),
-        builder: (context, snapshot) {
-          Map<String, dynamic>? data;
-          data = snapshot.data?.data() as Map<String, dynamic>?;
-          if (snapshot.hasError) {
-            return const Text('I have a bad feeling about this');
-          } else if (snapshot.hasData) {
-            return Card(
-              elevation: 1,
-              color: const Color.fromRGBO(60, 65, 85, 1),
-              child: ListTile(
-                textColor: Colors.white,
-                leading: const Icon(
-                  Icons.audiotrack_rounded,
-                  color: Colors.white,
-                ),
-                title: Text(
-                  data?['title'],
-                  style: const TextStyle(
-                    fontSize: 20,
-                  ),
-                ),
-                subtitle: Text(
-                  data?['description'],
-                  style: const TextStyle(
-                    fontSize: 12,
-                    fontStyle: FontStyle.italic,
-                  ),
-                ),
-              ),
-            );
-          } else {
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
-          }
-        },
-      ),*/
+        snapshot.docs.map((doc) => thisUser.fromJson(doc.data())).toList());
