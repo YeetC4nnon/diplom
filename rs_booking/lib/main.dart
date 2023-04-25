@@ -1,3 +1,5 @@
+// ignore_for_file: camel_case_types
+
 import 'package:flutter/material.dart';
 import 'package:rs_booking/firebase_options.dart';
 import 'package:firebase_core/firebase_core.dart';

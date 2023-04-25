@@ -94,8 +94,8 @@ class _AuthorizationState extends State<Authorization> {
 
           final navigator = Navigator.of(context);
 
-          final isValid = formKey.currentState!.validate();
-          if (!isValid) return;
+          //final isValid = formKey.currentState!.validate();
+          //if (!isValid) return;
 
           try {
             FirebaseAuth.instance.createUserWithEmailAndPassword(
@@ -103,7 +103,7 @@ class _AuthorizationState extends State<Authorization> {
               password: _passwordController.text.trim(),
             );
           } on FirebaseAuthException catch (e) {
-            print(e.code);
+            //print(e.code);
 
             if (e.code == 'user-not-found' || e.code == 'wrong-password') {
               SnackBarService.showSnackBar(
@@ -155,7 +155,7 @@ class _AuthorizationState extends State<Authorization> {
               password: _passwordController.text.trim(),
             );
           } on FirebaseAuthException catch (e) {
-            print(e.code);
+            //print(e.code);
 
             if (e.code == 'user-not-found' || e.code == 'wrong-password') {
               SnackBarService.showSnackBar(
@@ -247,16 +247,16 @@ class _AuthorizationState extends State<Authorization> {
     Future<void> _loginUser() async {
       final navigator = Navigator.of(context);
 
-      final isValid = formKey.currentState!.validate();
-      if (!isValid) return;
+      //final isValid = formKey.currentState!.validate();
+      //if (!isValid) return;
 
       try {
         await FirebaseAuth.instance.signInWithEmailAndPassword(
-          email: _emailController.text.trim(),
-          password: _passwordController.text.trim(),
+          email: _emailController.text,
+          password: _passwordController.text,
         );
       } on FirebaseAuthException catch (e) {
-        print(e.code);
+        //print(e.code);
 
         if (e.code == 'user-not-found' || e.code == 'wrong-password') {
           SnackBarService.showSnackBar(
@@ -281,8 +281,8 @@ class _AuthorizationState extends State<Authorization> {
     Future<void> _registerUser() async {
       final navigator = Navigator.of(context);
 
-      final isValid = formKey.currentState!.validate();
-      if (!isValid) return;
+      //final isValid = formKey.currentState!.validate();
+      //if (!isValid) return;
 
       try {
         await FirebaseAuth.instance.createUserWithEmailAndPassword(
@@ -290,7 +290,7 @@ class _AuthorizationState extends State<Authorization> {
           password: _passwordController.text.trim(),
         );
       } on FirebaseAuthException catch (e) {
-        print(e.code);
+        //print(e.code);
 
         if (e.code == 'user-not-found' || e.code == 'wrong-password') {
           SnackBarService.showSnackBar(

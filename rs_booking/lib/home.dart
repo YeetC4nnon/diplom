@@ -55,7 +55,7 @@ class _HomePageState extends State<HomePage> {
                     onTap: (() {
                       Navigator.of(context).pushNamed(
                         '/recordPage',
-                        arguments: snapshot.data!.id,
+                        arguments: data,
                       );
                     }),
                   ),

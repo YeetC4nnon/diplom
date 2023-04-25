@@ -85,7 +85,7 @@ class _RecordPageState extends State<RecordPage> {
               data = snapshot.data?.data() as Map<String, dynamic>?;
               if (snapshot.hasError) {
                 return const Text('I have a bad feeling about this');
-              } else if (snapshot.connectionState == ConnectionState.done) {
+              } else if (snapshot.hasData) {
                 return Card(
                   elevation: 1,
                   color: const Color.fromRGBO(60, 65, 85, 1),
