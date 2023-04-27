@@ -40,6 +40,7 @@ class _AuthorizationState extends State<Authorization> {
       );
     }
 
+    //базовый виджет инпута для ввода
     Widget _input(Icon icon, String hint, TextEditingController controller,
         bool obscure) {
       return Container(
@@ -72,6 +73,7 @@ class _AuthorizationState extends State<Authorization> {
       );
     }
 
+    //добавление юзера в коллекцию users
     Future createUser(thisUser user) async {
       final DocumentReference docUser =
           FirebaseFirestore.instance.collection('users').doc(isUser);
@@ -90,6 +92,7 @@ class _AuthorizationState extends State<Authorization> {
             name: _name,
             id: _id,
           );
+          //добавляем юзера в коллекцию
           createUser(user);
 
           final navigator = Navigator.of(context);
