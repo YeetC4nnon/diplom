@@ -139,7 +139,7 @@ class _RecordPageState extends State<RecordPage> {
 }
 
 Future createRecord(Record record) async {
-  final docRecord = FirebaseFirestore.instance.collection('records').doc();
+  final docRecord = FirebaseFirestore.instance.collection('records').doc(isUser);
 
   final json = record.toJson();
 
@@ -172,13 +172,13 @@ Widget buildStudio(Studio studio) => Card(
     );
 
 Stream getStudios(doc) async* {
-  var collection = FirebaseFirestore.instance.collection('studios').doc(doc);
+  var collection = FirebaseFirestore.instance.collection('studios').doc(isUser);
   var querySnapshot = collection.snapshots();
   yield querySnapshot;
 }
 
 Stream getUsers(doc) async* {
-  var collection = FirebaseFirestore.instance.collection('users').doc(doc);
+  var collection = FirebaseFirestore.instance.collection('users').doc(isUser);
   var querySnapshot = collection.snapshots();
   yield querySnapshot;
 }

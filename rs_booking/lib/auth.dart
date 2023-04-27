@@ -74,7 +74,7 @@ class _AuthorizationState extends State<Authorization> {
 
     Future createUser(thisUser user) async {
       final DocumentReference docUser =
-          FirebaseFirestore.instance.collection('users').doc();
+          FirebaseFirestore.instance.collection('users').doc(isUser);
 
       final json = user.toJson();
 
