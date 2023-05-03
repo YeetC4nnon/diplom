@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "937038820743",
+    "project_id": "rs-booking-2",
+    "storage_bucket": "rs-booking-2.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:937038820743:android:4d8fd808e698b7fc748f22",
+        "android_client_info": {
+          "package_name": "com.rs_dev.rs_booking_2"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "937038820743-78t33v3nfk7ha05pqr8rrg66uua978c3.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAZYhjZmK9MhrsRfIbYN4in2kUbI9Uz-rY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "937038820743-78t33v3nfk7ha05pqr8rrg66uua978c3.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
