@@ -32,13 +32,12 @@ abstract class $AppRouter extends _i4.RootStackRouter {
       );
     },
     RecordRoute.name: (routeData) {
-      final args = routeData.argsAs<RecordRouteArgs>(
-          orElse: () => const RecordRouteArgs());
+      final args = routeData.argsAs<RecordRouteArgs>();
       return _i4.AutoRoutePage<void>(
         routeData: routeData,
         child: _i3.RecordPage(
           key: args.key,
-          data: args.data,
+          token: args.token,
         ),
       );
     },
@@ -78,13 +77,13 @@ class HomeRoute extends _i4.PageRouteInfo<void> {
 class RecordRoute extends _i4.PageRouteInfo<RecordRouteArgs> {
   RecordRoute({
     _i5.Key? key,
-    Map<String, dynamic>? data,
+    required int token,
     List<_i4.PageRouteInfo>? children,
   }) : super(
           RecordRoute.name,
           args: RecordRouteArgs(
             key: key,
-            data: data,
+            token: token,
           ),
           initialChildren: children,
         );
@@ -98,15 +97,15 @@ class RecordRoute extends _i4.PageRouteInfo<RecordRouteArgs> {
 class RecordRouteArgs {
   const RecordRouteArgs({
     this.key,
-    this.data,
+    required this.token,
   });
 
   final _i5.Key? key;
 
-  final Map<String, dynamic>? data;
+  final int token;
 
   @override
   String toString() {
-    return 'RecordRouteArgs{key: $key, data: $data}';
+    return 'RecordRouteArgs{key: $key, token: $token}';
   }
 }

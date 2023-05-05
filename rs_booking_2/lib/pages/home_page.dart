@@ -1,28 +1,11 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:rs_booking_2/services/models.dart';
+import 'package:rs_booking_2/pages/record_page.dart';
 
 @RoutePage<void>()
-class HomePage extends StatefulWidget {
+class HomePage extends StatelessWidget {
   const HomePage({Key? key}) : super(key: key);
-
-  @override
-  State<HomePage> createState() => _HomePageState();
-}
-
-class _HomePageState extends State<HomePage> {
-  int _documentsCount = 0;
-
-  @override
-  void initState() {
-    super.initState();
-    getDocumentsCount().then((count) {
-      setState(() {
-        _documentsCount = count;
-      });
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -35,16 +18,14 @@ class _HomePageState extends State<HomePage> {
         ),
         backgroundColor: theme.appBarTheme.backgroundColor,
       ),
-      body: StreamBuilder<DocumentSnapshot>(
+      body: StreamBuilder(
         stream: getStudios(),
-        builder: (context, snapshot) {
-          Map<String, dynamic> data;
-          data = snapshot.data?.data() as Map<String, dynamic>;
+        builder: (BuildContext context, snapshot) {
           if (snapshot.hasError) {
             return Text(snapshot.error.toString());
           } else if (snapshot.hasData) {
             return ListView.separated(
-              itemCount: _documentsCount,
+              itemCount: snapshot.data!.docs.length,
               separatorBuilder: (BuildContext context, int index) => Divider(
                 color: theme.dividerTheme.color,
               ),
@@ -54,11 +35,11 @@ class _HomePageState extends State<HomePage> {
                 child: ListTile(
                   leading: const Icon(Icons.audiotrack_rounded),
                   title: Text(
-                    data['title'],
+                    snapshot.data!.docs[index].get('title'),
                     style: theme.textTheme.titleMedium,
                   ),
                   subtitle: Text(
-                    "От: ${data['min_cost']} руб.",
+                    "От:" + snapshot.data!.docs[index].get('min_cost').toString() + " руб.",
                     style: theme.textTheme.titleSmall,
                   ),
                   trailing: const Icon(
@@ -66,7 +47,10 @@ class _HomePageState extends State<HomePage> {
                     color: Colors.white,
                   ),
                   onTap: () {
-                    Navigator.of(context).pushNamed('RecordPage');
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => RecordPage(token: index)));
                   },
                 ),
               ),
@@ -82,12 +66,5 @@ class _HomePageState extends State<HomePage> {
   }
 }
 
-Stream<DocumentSnapshot> getStudios() =>
-    FirebaseFirestore.instance.collection('studios').doc(isUser).snapshots();
-
-Future<int> getDocumentsCount() async {
-  QuerySnapshot querySnapshot =
-      await FirebaseFirestore.instance.collection('studios').get();
-  int count = querySnapshot.size;
-  return count;
-}
+Stream getStudios() =>
+    FirebaseFirestore.instance.collection('studios').snapshots();

@@ -13,17 +13,21 @@ dependencies:
   build_runner: ^2.3.3
   cloud_firestore: ^4.5.2
   collection: ^1.17.0
+  dio: ^5.1.1
   firebase_auth: ^4.4.2
   firebase_core: ^2.10.0
   flutter:
     sdk: flutter
   flutter_bloc: ^8.1.2
+  json_annotation: ^4.8.1
   pedantic: ^1.11.1
+  talker_flutter: ^2.4.3
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^2.0.0
+  json_serializable: ^6.6.2
 
 flutter:
   uses-material-design: true

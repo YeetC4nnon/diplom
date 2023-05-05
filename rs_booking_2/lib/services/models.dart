@@ -1,15 +1,17 @@
 // ignore_for_file: non_constant_identifier_names, prefer_typing_uninitialized_variables, camel_case_types
 
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:json_annotation/json_annotation.dart';
 
 var isUser = FirebaseAuth.instance.currentUser?.uid;
 
+@JsonSerializable()
 class Studio {
   late String title;
-  var min_cost;
+  double min_cost;
   late String address;
   late String description;
-  var id;
+  int id;
 
   Studio({
     required this.title,
@@ -36,11 +38,12 @@ class Studio {
       );
 }
 
+@JsonSerializable()
 class thisUser {
   late String name;
   late String email;
   late String password;
-  var id;
+  int id;
 
   thisUser({
     required this.email,
@@ -64,10 +67,11 @@ class thisUser {
       );
 }
 
+@JsonSerializable()
 class Record {
-  var studio_id;
-  var sum;
-  var user_id;
+  int studio_id;
+  double sum;
+  int user_id;
   late String studio_title;
   late String user_email;
   late String user_name;
