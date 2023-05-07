@@ -11,14 +11,16 @@ class Studio {
   double min_cost;
   late String address;
   late String description;
-  int id;
+  int studio_id;
+  double factor;
 
   Studio({
     required this.title,
     required this.min_cost,
     required this.address,
     this.description = '',
-    required this.id,
+    required this.studio_id,
+    required this.factor,
   });
 
   Map<String, dynamic> toJson() => {
@@ -26,7 +28,8 @@ class Studio {
         'min_cost': min_cost,
         'address': address,
         'description': description,
-        'id': id,
+        'studio_id': studio_id,
+        'factor': factor,
       };
 
   static Studio fromJson(Map<String, dynamic> json) => Studio(
@@ -34,18 +37,19 @@ class Studio {
         min_cost: json['min_cost'],
         address: json['address'],
         description: json['description'],
-        id: json['id'],
+        studio_id: json['studio_id'],
+        factor: json['factor'],
       );
 }
 
 @JsonSerializable()
-class thisUser {
-  late String name;
-  late String email;
-  late String password;
+class User {
+  late int name;
+  late int email;
+  late int password;
   int id;
 
-  thisUser({
+  User({
     required this.email,
     required this.password,
     required this.name,
@@ -59,7 +63,7 @@ class thisUser {
         'id': id,
       };
 
-  static thisUser fromJson(Map<String, dynamic> json) => thisUser(
+  static User fromJson(Map<String, dynamic> json) => User(
         name: json['name'],
         email: json['email'],
         password: json['password'],
@@ -75,6 +79,8 @@ class Record {
   late String studio_title;
   late String user_email;
   late String user_name;
+  late String tariff_title;
+  late String tariff_type;
 
   Record({
     required this.studio_id,
@@ -83,6 +89,8 @@ class Record {
     required this.studio_title,
     required this.user_email,
     required this.user_name,
+    required this.tariff_title,
+    required this.tariff_type,
   });
 
   Map<String, dynamic> toJson() => {
@@ -92,6 +100,8 @@ class Record {
         'studio_title': studio_title,
         'user_email': user_email,
         'user_name': user_name,
+        'tariff_title': tariff_title,
+        'tariff_type': tariff_type,
       };
 
   static Record fromJson(Map<String, dynamic> json) => Record(
@@ -101,5 +111,7 @@ class Record {
         studio_title: json['studio_title'],
         user_email: json['user_email'],
         user_name: json['user_name'],
+        tariff_title: json['tariff_title'],
+        tariff_type: json['tariff_type'],
       );
 }

@@ -40,7 +40,7 @@ class HomePage extends StatelessWidget {
                     style: theme.textTheme.titleMedium,
                   ),
                   subtitle: Text(
-                    "От:" + snapshot.data!.docs[index].get('min_cost').toString() + " руб.",
+                    "От:${snapshot.data!.docs[index].get('min_cost')} руб.",
                     style: theme.textTheme.titleSmall,
                   ),
                   trailing: const Icon(
@@ -49,9 +49,13 @@ class HomePage extends StatelessWidget {
                   ),
                   onTap: () {
                     Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => RecordPage(token: index)));
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => RecordPage(
+                            token: index),
+                      ),
+                    );
+                    print(index);
                   },
                 ),
               ),

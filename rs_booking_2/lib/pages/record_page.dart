@@ -4,11 +4,10 @@ import 'package:auto_route/auto_route.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:rs_booking_2/services/models.dart';
-import 'package:rs_booking_2/widgets/widgets.dart';
 
 @RoutePage<void>()
 class RecordPage extends StatefulWidget {
-  RecordPage({
+  const RecordPage({
     Key? key,
     required this.token,
   }) : super(key: key);
@@ -19,42 +18,28 @@ class RecordPage extends StatefulWidget {
 }
 
 class _RecordPageState extends State<RecordPage> {
-  late final ValueNotifier<Tariffs?> _tariffs;
-
+  //late final ValueNotifier<Tariffs?> _tariffs;
   final _studioIDController = TextEditingController();
-
   final _studioTitleController = TextEditingController();
-
   final _studioSumController = TextEditingController();
-
   final _userEmailController = TextEditingController();
-
   final _userIDController = TextEditingController();
-
   final _userNameController = TextEditingController();
+  final _tariffTitleController = TextEditingController();
+  final _tariffTypeController = TextEditingController();
+  late Tariffs thisTariff;
+  late Studio thisStudio;
+  late User thisUser;
 
   /*void initState() {
     initState();
     _tariffs = ValueNotifier<Tariffs?>(null);
   }*/
-
-  /*void dispose() {
-    _tariffs.dispose();
-    _studioIDController.dispose();
-    _studioTitleController.dispose();
-    _studioSumController.dispose();
-    _userEmailController.dispose();
-    _userIDController.dispose();
-    _userNameController.dispose();
-    dispose();
-  }*/
-
   bool _enabled = false;
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
@@ -64,151 +49,191 @@ class _RecordPageState extends State<RecordPage> {
         ),
         backgroundColor: theme.appBarTheme.backgroundColor,
       ),
-      body: Column(
-        children: <Widget>[
-          StreamBuilder(
-            stream:
-                FirebaseFirestore.instance.collection('studios').snapshots(),
-            builder:
-                (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-              if (snapshot.hasError) {
-                return Text(snapshot.error.toString());
-              } else if (snapshot.hasData) {
-                return Card(
-                  color: theme.cardTheme.color,
-                  elevation: theme.cardTheme.elevation,
-                  child: ListTile(
-                    textColor: Colors.white,
-                    leading: const Icon(
-                      Icons.audiotrack_rounded,
-                      color: Colors.white,
-                    ),
-                    title: Text(
-                      snapshot.data!.docs[widget.token].get('title'),
-                      style: const TextStyle(
-                        fontSize: 20,
+      body: SizedBox(
+        height: MediaQuery.of(context).size.height,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            StreamBuilder(
+              stream: getStudios(),
+              builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
+                if (snapshot.hasError) {
+                  return Text(snapshot.error.toString());
+                } else if (snapshot.hasData) {
+                  thisStudio = Studio(
+                      address: snapshot.data!.docs[widget.token].get('address'),
+                      min_cost:
+                          snapshot.data!.docs[widget.token].get('min_cost'),
+                      title: snapshot.data!.docs[widget.token].get('title'),
+                      studio_id:
+                          snapshot.data!.docs[widget.token].get('studio_id'),
+                      factor: snapshot.data!.docs[widget.token].get('factor'),);
+                  return Card(
+                    color: theme.cardTheme.color,
+                    elevation: theme.cardTheme.elevation,
+                    child: ListTile(
+                      textColor: Colors.white,
+                      leading: const Icon(
+                        Icons.audiotrack_rounded,
+                        color: Colors.white,
                       ),
-                    ),
-                    subtitle: Text(
-                      snapshot.data!.docs[widget.token].get('description'),
-                      style: const TextStyle(
-                        fontSize: 12,
-                        fontStyle: FontStyle.italic,
-                      ),
-                    ),
-                  ),
-                );
-              } else {
-                return const Center(
-                  child: CircularProgressIndicator(),
-                );
-              }
-            },
-          ),
-          StreamBuilder(
-            stream:
-                FirebaseFirestore.instance.collection('studios').snapshots(),
-            builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-              Tariffs tariffs =
-                  Tariffs.fromDocument(snapshot.data!.docs[widget.token]);
-              return StreamBuilder(
-                  stream: FirebaseFirestore.instance
-                      .collection('studios')
-                      .doc(isUser)
-                      .collection('tariffs')
-                      .snapshots(),
-                  builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-                    return ListView.separated(
-                      itemCount: snapshot.data!.docs.length,
-                      separatorBuilder: (context, index) => const SizedBox(
-                        height: 14,
-                      ),
-                      itemBuilder: (context, index) => Card(
-                        elevation: theme.cardTheme.elevation,
-                        color: const Color.fromARGB(255, 66, 62, 49),
-                        child: InkWell(
-                          onTap: () {
-                            setState(() => _enabled = !_enabled);
-                          },
-                          child: ListTile(
-                            textColor: Colors.white,
-                            leading: Icon(
-                              _enabled
-                                  ? Icons.radio_button_off
-                                  : Icons.radio_button_checked,
-                              color: Colors.white,
-                            ),
-                            title: Text(
-                              snapshot.data!.docs[index].get('tariff_title'),
-                              style: theme.textTheme.titleMedium,
-                            ),
-                            subtitle: Text(
-                              '${snapshot.data!.docs[index].get('tariff_cost')}руб.',
-                              style: theme.textTheme.titleSmall,
-                            ),
-                            trailing: Text(
-                              snapshot.data!.docs[index].get('tariff_type'),
-                              style: theme.textTheme.titleMedium,
-                            ),
-                          ),
+                      title: Text(
+                        snapshot.data!.docs[widget.token].get('title'),
+                        style: const TextStyle(
+                          fontSize: 20,
                         ),
                       ),
-                    );
-                  });
-            },
-          ),
-          ElevatedButton(
-            onPressed: (() {
-              final record = Record(
-                studio_id: int.parse(_studioIDController.text),
-                sum: double.parse(_studioSumController.text),
-                user_id: int.parse(_userIDController.text),
-                studio_title: _studioTitleController.text,
-                user_email: _userEmailController.text,
-                user_name: _userNameController.text,
-              );
+                      subtitle: Text(
+                        snapshot.data!.docs[widget.token]
+                            .get('description')
+                            .toString(),
+                        style: const TextStyle(
+                          fontSize: 12,
+                          fontStyle: FontStyle.italic,
+                        ),
+                      ),
+                    ),
+                  );
+                } else {
+                  return const Center(
+                    child: CircularProgressIndicator(),
+                  );
+                }
+              },
+            ),
+            StreamBuilder(
+              stream: getUsers(),
+              builder: (context, snapshot) {
+                if (snapshot.hasError) {
+                  return const Text('I have a bad feeling about this');
+                } else if (snapshot.hasData) {
+                  thisUser = User(
+                    email: snapshot.data!.docs[0].get('email'),
+                    password: snapshot.data!.docs[0].get('password'),
+                    name: snapshot.data!.docs[0].get('name'),
+                    id: snapshot.data!.docs[0].get('id'),
+                  );
+                  return Card(
+                    elevation: 1,
+                    color: const Color.fromRGBO(60, 65, 85, 1),
+                    child: ListTile(
+                      textColor: Colors.white,
+                      leading: const Icon(
+                        Icons.account_circle,
+                        color: Colors.white,
+                      ),
+                      title: Text(
+                        snapshot.data!.docs[widget.token].get('name'),
+                        style: const TextStyle(
+                          fontSize: 20,
+                        ),
+                      ),
+                      subtitle: Text(
+                        snapshot.data!.docs[widget.token].get('email'),
+                        style: const TextStyle(
+                          fontSize: 12,
+                          fontStyle: FontStyle.italic,
+                        ),
+                      ),
+                    ),
+                  );
+                } else {
+                  return const Center(
+                    child: CircularProgressIndicator(),
+                  );
+                }
+              },
+            ),
+            StreamBuilder(
+              stream: getTariffs(),
+              builder: (BuildContext context, snapshot) {
+                if (snapshot.hasError) {
+                  return Text(snapshot.error.toString());
+                } else if (snapshot.hasData) {
+                  return ListView.separated(
+                    shrinkWrap: true,
+                    itemCount: snapshot.data!.docs.length,
+                    separatorBuilder: (BuildContext context, int index) =>
+                        Divider(
+                      color: theme.dividerTheme.color,
+                    ),
+                    itemBuilder: (context, index) => Card(
+                      color: theme.cardTheme.color,
+                      elevation: theme.cardTheme.elevation,
+                      child: InkWell(
+                        onTap: () {
+                          setState(() {
+                            _enabled = !_enabled;
+                          });
+                        },
+                        child: ListTile(
+                          leading: Icon(
+                            _enabled
+                                ? Icons.radio_button_off
+                                : Icons.radio_button_checked,
+                            color: Colors.white,
+                          ),
+                          title: Text(
+                            snapshot.data!.docs[index].get('tariff_title'),
+                            style: theme.textTheme.titleMedium,
+                          ),
+                          subtitle: Text(
+                            "${snapshot.data!.docs[index].get('tariff_cost')} руб.",
+                            style: theme.textTheme.titleSmall,
+                          ),
+                          trailing: Text(
+                            snapshot.data!.docs[index].get('tariff_type'),
+                            style: theme.textTheme.titleMedium,
+                          ),
+                          onTap: () {
+                            thisTariff = Tariffs(
+                              tariff_title: snapshot.data!.docs[index]
+                                  .get('tariff_title'),
+                              tariff_cost:
+                                  snapshot.data!.docs[index].get('tariff_cost'),
+                              tariff_type:
+                                  snapshot.data!.docs[index].get('tariff_type'),
+                            );
+                          },
+                        ),
+                      ),
+                    ),
+                  );
+                } else {
+                  return const Center(
+                    child: CircularProgressIndicator(),
+                  );
+                }
+              },
+            ),
+            ElevatedButton(
+              onPressed: (() {
+                final record = Record(
+                  studio_id: thisStudio.studio_id,
+                  studio_title: thisStudio.title,
+                  sum: thisStudio.factor * thisTariff.tariff_cost.toDouble(),
+                  tariff_title: thisTariff.tariff_title,
+                  tariff_type: thisTariff.tariff_type,
+                  user_email: thisUser.email.toString(),
+                  user_id: thisUser.id,
+                  user_name: thisUser.name.toString(),
+                );
 
-              createRecord(record);
-            }),
-            child: const Text('Арендовать'),
-          )
-        ],
+                createRecord(record);
+              }),
+              child: const Text('Арендовать'),
+            )
+          ],
+        ),
       ),
     );
   }
 }
 
-getTariffs() async {
-  await FirebaseFirestore.instance.collection('studios').get().then(
-    (querySnapshot) async {
-      querySnapshot.docs.forEach(
-        (result) async {
-          await FirebaseFirestore.instance
-              .collection('studios')
-              .doc(result.id)
-              .collection('tariffs')
-              .get()
-              .then(
-            (querySnapshot) {
-              querySnapshot.docs.forEach(
-                (result) {
-                  Tariffs tariffs = Tariffs.fromDocument(result);
-                },
-              );
-            },
-          );
-        },
-      );
-    },
-  );
-}
-
 Future createRecord(Record record) async {
   final docRecord =
-      FirebaseFirestore.instance.collection('records').doc(isUser);
-
+      FirebaseFirestore.instance.collection('records').doc();
   final json = record.toJson();
-
   await docRecord.set(json);
 }
 
@@ -231,6 +256,55 @@ class Tariffs {
     );
   }
 }
+
+Stream getStudios() =>
+    FirebaseFirestore.instance.collection('studios').snapshots();
+
+Stream getTariffs() =>
+    FirebaseFirestore.instance.collection('tariffs').snapshots();
+
+Stream getUsers() => FirebaseFirestore.instance.collection('users').snapshots();
+
+/*getTariffs() async {
+  await FirebaseFirestore.instance.collection('studios').get().then(
+    (querySnapshot) async {
+      querySnapshot.docs.forEach(
+        (result) async {
+          await FirebaseFirestore.instance
+              .collection('studios')
+              .doc(result.id)
+              .collection('tariffs')
+              .get()
+              .then(
+            (querySnapshot) {
+              querySnapshot.docs.forEach(
+                (result) {
+                  Tariffs tariffs = Tariffs.fromDocument(result);
+                },
+              );
+            },
+          );
+        },
+      );
+    },
+  );
+}*/
+
+/*Future getDocID() {
+  return FirebaseFirestore.instance
+      .collection('studios')
+      .doc(isUser)
+      .get()
+      .then(
+    (DocumentSnapshot documentSnapshot) {
+      if (documentSnapshot.exists) {
+        String documentId = documentSnapshot.id;
+      } else {
+        print('Document does not exist');
+      }
+    },
+  );
+}*/
 
 /*class _RadioButton extends StatelessWidget {
   final String title;
