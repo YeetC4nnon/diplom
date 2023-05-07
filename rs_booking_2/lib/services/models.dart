@@ -44,9 +44,9 @@ class Studio {
 
 @JsonSerializable()
 class User {
-  late int name;
-  late int email;
-  late int password;
+  late String name;
+  late String email;
+  late String password;
   int id;
 
   User({
