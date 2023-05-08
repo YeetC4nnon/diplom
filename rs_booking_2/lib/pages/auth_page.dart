@@ -24,14 +24,20 @@ class _AuthorizationPageState extends State<AuthorizationPage> {
   final usersRef = FirebaseFirestore.instance.collection('users');
 
   @override
+  void initState() {
+    super.initState();
+    isUser;
+  }
+
+  @override
   Widget build(BuildContext context) {
     Future<void> _registerUser(
         String name, String email, String password) async {
       try {
         UserCredential userCredential =
             await FirebaseAuth.instance.createUserWithEmailAndPassword(
-          email: _emailController.toString(),
-          password: _passwordController.hashCode.toString(),
+          email: _emailController.text.trim(),
+          password: _passwordController.text.trim(),
         );
 
         // Создаем новый документ в коллекции 'users'
@@ -45,9 +51,9 @@ class _AuthorizationPageState extends State<AuthorizationPage> {
           'id': newUserRef.id, // присваиваем полю 'id' значение id документа
         });
 
-        //print("Пользователь успешно добавлен в коллекцию 'users'!");
+        print("Пользователь успешно добавлен в коллекцию 'users'!");
       } catch (e) {
-        //print("Ошибка при добавлении пользователя в коллекцию 'users': $e");
+        print("Ошибка при добавлении пользователя в коллекцию 'users': $e");
       }
     }
 
@@ -55,8 +61,8 @@ class _AuthorizationPageState extends State<AuthorizationPage> {
       return ElevatedButton(
         onPressed: () {
           try {
-            _registerUser(_nameController.toString(),
-                _emailController.toString(), _passwordController.toString());
+            _registerUser(_nameController.value.toString(),
+                _emailController.value.toString(), _passwordController.value.toString());
           } on FirebaseAuthException catch (e) {
             if (e.code == 'user-not-found' || e.code == 'wrong-password') {
               SnackBarService.showSnackBar(
@@ -74,6 +80,11 @@ class _AuthorizationPageState extends State<AuthorizationPage> {
               return;
             }
           }
+          setState(
+            () {
+              isUser;
+            },
+          );
           Navigator.of(context).pushNamed('HomePage');
           print(isUser);
         },
@@ -143,6 +154,11 @@ class _AuthorizationPageState extends State<AuthorizationPage> {
               return;
             }
           }
+          setState(
+            () {
+              isUser;
+            },
+          );
           Navigator.of(context).pushNamed('HomePage');
           print(isUser);
         },

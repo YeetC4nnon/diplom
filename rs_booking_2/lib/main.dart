@@ -6,21 +6,19 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:rs_booking_2/pages/auth_page.dart';
 import 'package:rs_booking_2/pages/home_page.dart';
 
-import 'services/auto_route.dart';
-
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  runApp(rs_booking_2());
+  runApp(const rs_booking_2());
 }
 
 // ignore: camel_case_types
 class rs_booking_2 extends StatelessWidget {
-  rs_booking_2({super.key});
-  static final _appRouter = AppRouter();
-  final _observer = Observer();
+  const rs_booking_2({super.key});
+  //static final _appRouter = AppRouter();
+  //final _observer = Observer();
 
   @override
   Widget build(BuildContext context) {
