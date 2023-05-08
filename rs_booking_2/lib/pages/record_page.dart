@@ -3,6 +3,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:rs_booking_2/services/models.dart';
 
 @RoutePage<void>()
@@ -19,17 +20,42 @@ class RecordPage extends StatefulWidget {
 
 class _RecordPageState extends State<RecordPage> {
   //late final ValueNotifier<Tariffs?> _tariffs;
-  final _studioIDController = TextEditingController();
-  final _studioTitleController = TextEditingController();
-  final _studioSumController = TextEditingController();
-  final _userEmailController = TextEditingController();
-  final _userIDController = TextEditingController();
-  final _userNameController = TextEditingController();
-  final _tariffTitleController = TextEditingController();
-  final _tariffTypeController = TextEditingController();
   late Tariffs thisTariff;
   late Studio thisStudio;
   late User thisUser;
+
+  DateTime selectedDate = DateTime.now();
+  TimeOfDay selectedTime = const TimeOfDay(hour: 9, minute: 30);
+
+  _selectDate() async {
+    final DateTime? date = await showDatePicker(
+        context: context,
+        initialDate: selectedDate,
+        firstDate: DateTime(1900),
+        lastDate: DateTime(2100));
+
+    if (date == null) return;
+
+    setState(
+      () {
+        selectedDate = date;
+      },
+    );
+  }
+
+  _selectTime() async {
+    final TimeOfDay? time = await showTimePicker(
+      context: context,
+      initialTime: selectedTime,
+    );
+
+    if (time == null) return;
+    setState(
+      () {
+        selectedTime = time;
+      },
+    );
+  }
 
   /*void initState() {
     initState();
@@ -61,13 +87,13 @@ class _RecordPageState extends State<RecordPage> {
                   return Text(snapshot.error.toString());
                 } else if (snapshot.hasData) {
                   thisStudio = Studio(
-                      address: snapshot.data!.docs[widget.token].get('address'),
-                      min_cost:
-                          snapshot.data!.docs[widget.token].get('min_cost'),
-                      title: snapshot.data!.docs[widget.token].get('title'),
-                      studio_id:
-                          snapshot.data!.docs[widget.token].get('studio_id'),
-                      factor: snapshot.data!.docs[widget.token].get('factor'),);
+                    address: snapshot.data!.docs[widget.token].get('address'),
+                    min_cost: snapshot.data!.docs[widget.token].get('min_cost'),
+                    title: snapshot.data!.docs[widget.token].get('title'),
+                    studio_id:
+                        snapshot.data!.docs[widget.token].get('studio_id'),
+                    factor: snapshot.data!.docs[widget.token].get('factor'),
+                  );
                   return Card(
                     color: theme.cardTheme.color,
                     elevation: theme.cardTheme.elevation,
@@ -123,13 +149,13 @@ class _RecordPageState extends State<RecordPage> {
                         color: Colors.white,
                       ),
                       title: Text(
-                        snapshot.data!.docs[widget.token].get('name'),
+                        snapshot.data!.docs[0].get('name'),
                         style: const TextStyle(
                           fontSize: 20,
                         ),
                       ),
                       subtitle: Text(
-                        snapshot.data!.docs[widget.token].get('email'),
+                        snapshot.data!.docs[0].get('email'),
                         style: const TextStyle(
                           fontSize: 12,
                           fontStyle: FontStyle.italic,
@@ -206,6 +232,39 @@ class _RecordPageState extends State<RecordPage> {
                 }
               },
             ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Text(
+                  'Выберите время: ',
+                  style: theme.textTheme.titleMedium,
+                ),
+                InkWell(
+                  onTap: _selectDate,
+                  child: Row(
+                    children: <Widget>[
+                      Text(
+                        DateFormat.yMMMd().format(selectedDate),
+                        style: theme.textTheme.titleMedium,
+                      ),
+                      const Icon(Icons.arrow_drop_down)
+                    ],
+                  ),
+                ),
+                InkWell(
+                  onTap: _selectTime,
+                  child: Row(
+                    children: <Widget>[
+                      Text(
+                        selectedTime.format(context),
+                        style: theme.textTheme.titleMedium,
+                      ),
+                      const Icon(Icons.arrow_drop_down)
+                    ],
+                  ),
+                )
+              ],
+            ),
             ElevatedButton(
               onPressed: (() {
                 final record = Record(
@@ -217,6 +276,7 @@ class _RecordPageState extends State<RecordPage> {
                   user_email: thisUser.email.toString(),
                   user_id: thisUser.id,
                   user_name: thisUser.name.toString(),
+                  datetime: '${selectedDate.year}${selectedDate.month}${selectedDate.day}${selectedTime}am',
                 );
 
                 createRecord(record);
@@ -231,8 +291,7 @@ class _RecordPageState extends State<RecordPage> {
 }
 
 Future createRecord(Record record) async {
-  final docRecord =
-      FirebaseFirestore.instance.collection('records').doc();
+  final docRecord = FirebaseFirestore.instance.collection('records').doc();
   final json = record.toJson();
   await docRecord.set(json);
 }

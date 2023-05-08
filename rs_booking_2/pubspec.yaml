@@ -19,6 +19,7 @@ dependencies:
   flutter:
     sdk: flutter
   flutter_bloc: ^8.1.2
+  intl: ^0.17.0
   json_annotation: ^4.8.1
   pedantic: ^1.11.1
   talker_flutter: ^2.4.3

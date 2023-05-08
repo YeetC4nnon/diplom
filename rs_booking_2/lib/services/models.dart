@@ -1,6 +1,8 @@
 // ignore_for_file: non_constant_identifier_names, prefer_typing_uninitialized_variables, camel_case_types
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 var isUser = FirebaseAuth.instance.currentUser?.uid;
@@ -47,7 +49,7 @@ class User {
   late String name;
   late String email;
   late String password;
-  int id;
+  String id;
 
   User({
     required this.email,
@@ -75,12 +77,13 @@ class User {
 class Record {
   int studio_id;
   double sum;
-  int user_id;
+  String user_id;
   late String studio_title;
   late String user_email;
   late String user_name;
   late String tariff_title;
   late String tariff_type;
+  late String datetime;
 
   Record({
     required this.studio_id,
@@ -91,6 +94,7 @@ class Record {
     required this.user_name,
     required this.tariff_title,
     required this.tariff_type,
+    required this.datetime,
   });
 
   Map<String, dynamic> toJson() => {
@@ -102,6 +106,7 @@ class Record {
         'user_name': user_name,
         'tariff_title': tariff_title,
         'tariff_type': tariff_type,
+        'datetime': datetime,
       };
 
   static Record fromJson(Map<String, dynamic> json) => Record(
@@ -113,5 +118,6 @@ class Record {
         user_name: json['user_name'],
         tariff_title: json['tariff_title'],
         tariff_type: json['tariff_type'],
+        datetime: json['datetime'],
       );
 }
