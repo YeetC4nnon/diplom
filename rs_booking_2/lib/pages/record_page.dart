@@ -247,7 +247,10 @@ class _RecordPageState extends State<RecordPage> {
                         DateFormat.yMMMd().format(selectedDate),
                         style: theme.textTheme.titleMedium,
                       ),
-                      const Icon(Icons.arrow_drop_down)
+                      const Icon(
+                        Icons.arrow_drop_down,
+                        color: Colors.white,
+                      )
                     ],
                   ),
                 ),
@@ -259,7 +262,10 @@ class _RecordPageState extends State<RecordPage> {
                         selectedTime.format(context),
                         style: theme.textTheme.titleMedium,
                       ),
-                      const Icon(Icons.arrow_drop_down)
+                      const Icon(
+                        Icons.arrow_drop_down,
+                        color: Colors.white,
+                      )
                     ],
                   ),
                 )
@@ -276,7 +282,8 @@ class _RecordPageState extends State<RecordPage> {
                   user_email: thisUser.email.toString(),
                   user_id: thisUser.id,
                   user_name: thisUser.name.toString(),
-                  datetime: '${selectedDate.year}${selectedDate.month}${selectedDate.day}${selectedTime}am',
+                  datetime:
+                      '${selectedDate.year}${selectedDate.month}${selectedDate.day}${selectedTime}am',
                 );
 
                 createRecord(record);
