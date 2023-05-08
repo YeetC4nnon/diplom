@@ -26,6 +26,7 @@ class HomePage extends StatelessWidget {
             return Text(snapshot.error.toString());
           } else if (snapshot.hasData) {
             return ListView.separated(
+              shrinkWrap: true,
               itemCount: snapshot.data!.docs.length,
               separatorBuilder: (BuildContext context, int index) => Divider(
                 color: theme.dividerTheme.color,
@@ -34,7 +35,18 @@ class HomePage extends StatelessWidget {
                 color: theme.cardTheme.color,
                 elevation: theme.cardTheme.elevation,
                 child: ListTile(
-                  leading: const Icon(Icons.audiotrack_rounded),
+                  leading: Container(
+                    height: 75,
+                    width: 75,
+                    decoration: BoxDecoration(
+                      image: DecorationImage(
+                        image: NetworkImage(
+                          snapshot.data!.docs[index].get('image'),
+                          scale: 1,
+                        ),
+                      ),
+                    ),
+                  ),
                   title: Text(
                     snapshot.data!.docs[index].get('title'),
                     style: theme.textTheme.titleMedium,
@@ -51,8 +63,7 @@ class HomePage extends StatelessWidget {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => RecordPage(
-                            token: index),
+                        builder: (context) => RecordPage(token: index),
                       ),
                     );
                     print(index);
