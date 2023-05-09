@@ -63,6 +63,8 @@ class _RecordPageState extends State<RecordPage> {
   }*/
   bool _enabled = false;
 
+  int _selectedIndex = -1;
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -95,13 +97,25 @@ class _RecordPageState extends State<RecordPage> {
                     factor: snapshot.data!.docs[widget.token].get('factor'),
                   );
                   return Card(
+                    shadowColor: Colors.black,
+                    margin:
+                        const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
                     color: theme.cardTheme.color,
                     elevation: theme.cardTheme.elevation,
                     child: ListTile(
                       textColor: Colors.white,
-                      leading: const Icon(
-                        Icons.audiotrack_rounded,
-                        color: Colors.white,
+                      leading: Container(
+                        height: 150,
+                        width: 150,
+                        decoration: BoxDecoration(
+                          image: DecorationImage(
+                            image: NetworkImage(
+                              snapshot.data!.docs[widget.token].get('image'),
+                              scale: 1,
+                            ),
+                            fit: BoxFit.fitWidth,
+                          ),
+                        ),
                       ),
                       title: Text(
                         snapshot.data!.docs[widget.token].get('title'),
@@ -140,7 +154,9 @@ class _RecordPageState extends State<RecordPage> {
                     id: snapshot.data!.docs[0].get('id'),
                   );
                   return Card(
-                    elevation: 1,
+                    margin:
+                        const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+                    elevation: 3,
                     color: const Color.fromRGBO(60, 65, 85, 1),
                     child: ListTile(
                       textColor: Colors.white,
@@ -180,10 +196,12 @@ class _RecordPageState extends State<RecordPage> {
                     shrinkWrap: true,
                     itemCount: snapshot.data!.docs.length,
                     separatorBuilder: (BuildContext context, int index) =>
-                        Divider(
-                      color: theme.dividerTheme.color,
+                        const SizedBox(
+                      height: 12,
                     ),
                     itemBuilder: (context, index) => Card(
+                      margin: const EdgeInsets.symmetric(
+                          vertical: 8, horizontal: 16),
                       color: theme.cardTheme.color,
                       elevation: theme.cardTheme.elevation,
                       child: InkWell(
@@ -220,7 +238,13 @@ class _RecordPageState extends State<RecordPage> {
                               tariff_type:
                                   snapshot.data!.docs[index].get('tariff_type'),
                             );
+                            setState(() {
+                              _selectedIndex = index;
+                            });
                           },
+                          selected: index == _selectedIndex,
+                          selectedTileColor:
+                              const Color.fromARGB(255, 105, 80, 5),
                         ),
                       ),
                     ),
@@ -232,6 +256,11 @@ class _RecordPageState extends State<RecordPage> {
                 }
               },
             ),
+            Text(
+                _selectedIndex == -1
+                    ? "Не выбрано"
+                    : "Выбрано: ${[_selectedIndex + 1]}",
+                style: const TextStyle(fontSize: 30)),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[

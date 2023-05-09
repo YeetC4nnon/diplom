@@ -51,9 +51,9 @@ class _AuthorizationPageState extends State<AuthorizationPage> {
           'id': newUserRef.id, // присваиваем полю 'id' значение id документа
         });
 
-        print("Пользователь успешно добавлен в коллекцию 'users'!");
+        //print("Пользователь успешно добавлен в коллекцию 'users'!");
       } catch (e) {
-        print("Ошибка при добавлении пользователя в коллекцию 'users': $e");
+        //print("Ошибка при добавлении пользователя в коллекцию 'users': $e");
       }
     }
 
@@ -86,7 +86,7 @@ class _AuthorizationPageState extends State<AuthorizationPage> {
             },
           );
           Navigator.of(context).pushNamed('HomePage');
-          print(isUser);
+          //print(isUser);
         },
         child: const Text(
           'Регистрация',
@@ -160,7 +160,7 @@ class _AuthorizationPageState extends State<AuthorizationPage> {
             },
           );
           Navigator.of(context).pushNamed('HomePage');
-          print(isUser);
+          //print(isUser);
         },
       );
     }

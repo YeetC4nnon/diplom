@@ -1,4 +1,3 @@
-import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:rs_booking_2/firebase_options.dart';
 // ignore: depend_on_referenced_packages
@@ -59,12 +58,5 @@ class rs_booking_2 extends StatelessWidget {
         scaffoldBackgroundColor: const Color.fromARGB(255, 128, 95, 95),
       ),
     );
-  }
-}
-
-class Observer extends AutoRouterObserver {
-  @override
-  void didPush(Route route, Route? previousRoute) {
-    print('New route pushed: ${route.settings.name}');
   }
 }

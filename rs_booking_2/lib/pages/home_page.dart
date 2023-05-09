@@ -31,43 +31,52 @@ class HomePage extends StatelessWidget {
               separatorBuilder: (BuildContext context, int index) => Divider(
                 color: theme.dividerTheme.color,
               ),
-              itemBuilder: (context, index) => Card(
-                color: theme.cardTheme.color,
-                elevation: theme.cardTheme.elevation,
-                child: ListTile(
-                  leading: Container(
-                    height: 75,
-                    width: 75,
-                    decoration: BoxDecoration(
-                      image: DecorationImage(
-                        image: NetworkImage(
-                          snapshot.data!.docs[index].get('image'),
-                          scale: 1,
+              itemBuilder: (context, index) => SizedBox(
+                height: 150,
+                child: Card(
+                  margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+                  color: theme.cardTheme.color,
+                  elevation: theme.cardTheme.elevation,
+                  child: SizedBox(
+                    height: 150,
+                    child: ListTile(
+                      contentPadding: const EdgeInsets.all(2),
+                      minVerticalPadding: 2,
+                      leading: Container(
+                        height: 150,
+                        width: 150,
+                        decoration: BoxDecoration(
+                          image: DecorationImage(
+                            image: NetworkImage(
+                              snapshot.data!.docs[index].get('image'),
+                            ),
+                            fit: BoxFit.fitWidth,
+                          ),
                         ),
                       ),
+                      title: Text(
+                        snapshot.data!.docs[index].get('title'),
+                        style: theme.textTheme.titleMedium,
+                      ),
+                      subtitle: Text(
+                        "От: ${snapshot.data!.docs[index].get('min_cost')} руб.",
+                        style: theme.textTheme.titleSmall,
+                      ),
+                      trailing: const Icon(
+                        Icons.arrow_forward_ios,
+                        color: Colors.white,
+                      ),
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => RecordPage(token: index),
+                          ),
+                        );
+                        //print(index);
+                      },
                     ),
                   ),
-                  title: Text(
-                    snapshot.data!.docs[index].get('title'),
-                    style: theme.textTheme.titleMedium,
-                  ),
-                  subtitle: Text(
-                    "От:${snapshot.data!.docs[index].get('min_cost')} руб.",
-                    style: theme.textTheme.titleSmall,
-                  ),
-                  trailing: const Icon(
-                    Icons.arrow_forward_ios,
-                    color: Colors.white,
-                  ),
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => RecordPage(token: index),
-                      ),
-                    );
-                    print(index);
-                  },
                 ),
               ),
             );
