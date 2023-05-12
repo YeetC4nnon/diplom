@@ -20,10 +20,11 @@ class HomePage extends StatelessWidget {
         backgroundColor: theme.appBarTheme.backgroundColor,
       ),
       body: Container(
+        height: double.infinity,
         decoration: const BoxDecoration(
           image: DecorationImage(
-            image: AssetImage(
-              '../assets/images.background.jpg',
+            image: NetworkImage(
+              'https://firebasestorage.googleapis.com/v0/b/rs-booking.appspot.com/o/background.jpg?alt=media&token=883b2adb-c7c3-4ef1-840c-5c2cf29e515d',
             ),
             fit: BoxFit.fill,
           ),
@@ -47,20 +48,18 @@ class HomePage extends StatelessWidget {
                         const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
                     color: theme.cardTheme.color,
                     elevation: theme.cardTheme.elevation,
-                    child: SizedBox(
-                      height: 150,
-                      child: ListTile(
+                    child: ListTile(
                         contentPadding: const EdgeInsets.all(2),
                         minVerticalPadding: 2,
                         leading: Container(
-                          height: 150,
-                          width: 150,
+                          height: 75,
+                          width: 75,
                           decoration: BoxDecoration(
                             image: DecorationImage(
                               image: NetworkImage(
                                 snapshot.data!.docs[index].get('image'),
                               ),
-                              fit: BoxFit.fitWidth,
+                              fit: BoxFit.fill,
                             ),
                           ),
                         ),
@@ -86,7 +85,7 @@ class HomePage extends StatelessWidget {
                           //print(index);
                         },
                       ),
-                    ),
+                    
                   ),
                 ),
               );

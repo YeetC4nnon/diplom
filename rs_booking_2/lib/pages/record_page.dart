@@ -77,10 +77,17 @@ class _RecordPageState extends State<RecordPage> {
         ),
         backgroundColor: theme.appBarTheme.backgroundColor,
       ),
-      body: SizedBox(
-        height: MediaQuery.of(context).size.height,
+      body: Container(
+        height: double.infinity,
+        decoration: const BoxDecoration(
+          image: DecorationImage(
+            image: NetworkImage(
+              'https://firebasestorage.googleapis.com/v0/b/rs-booking.appspot.com/o/background.jpg?alt=media&token=883b2adb-c7c3-4ef1-840c-5c2cf29e515d',
+            ),
+            fit: BoxFit.fill,
+          ),
+        ),
         child: Column(
-          mainAxisSize: MainAxisSize.min,
           children: <Widget>[
             StreamBuilder(
               stream: getStudios(),
@@ -244,7 +251,7 @@ class _RecordPageState extends State<RecordPage> {
                           },
                           selected: index == _selectedIndex,
                           selectedTileColor:
-                              const Color.fromARGB(255, 105, 80, 5),
+                              const Color.fromARGB(255, 8, 22, 83),
                         ),
                       ),
                     ),
@@ -255,12 +262,6 @@ class _RecordPageState extends State<RecordPage> {
                   );
                 }
               },
-            ),
-            Text(
-              _selectedIndex == -1
-                  ? "Не выбрано"
-                  : "Выбрано: ${[_selectedIndex + 1]}",
-              style: const TextStyle(fontSize: 30),
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -300,6 +301,9 @@ class _RecordPageState extends State<RecordPage> {
                   ),
                 )
               ],
+            ),
+            const SizedBox(
+              height: 14,
             ),
             ElevatedButton(
               onPressed: (() {
