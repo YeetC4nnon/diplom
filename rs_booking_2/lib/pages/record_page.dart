@@ -257,10 +257,11 @@ class _RecordPageState extends State<RecordPage> {
               },
             ),
             Text(
-                _selectedIndex == -1
-                    ? "Не выбрано"
-                    : "Выбрано: ${[_selectedIndex + 1]}",
-                style: const TextStyle(fontSize: 30)),
+              _selectedIndex == -1
+                  ? "Не выбрано"
+                  : "Выбрано: ${[_selectedIndex + 1]}",
+              style: const TextStyle(fontSize: 30),
+            ),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[

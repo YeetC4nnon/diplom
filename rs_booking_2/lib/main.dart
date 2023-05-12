@@ -53,7 +53,7 @@ class rs_booking_2 extends StatelessWidget {
         ),
         cardTheme: const CardTheme(
           elevation: 1,
-          color: Color.fromARGB(255, 173, 132, 7),
+          color: Color.fromARGB(255, 245, 164, 44),
         ),
         scaffoldBackgroundColor: const Color.fromARGB(255, 128, 95, 95),
       ),
