@@ -5,6 +5,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:rs_booking_2/services/models.dart';
+import 'package:rs_booking_2/services/snack_bar.dart';
 
 @RoutePage<void>()
 class RecordPage extends StatefulWidget {
@@ -19,7 +20,6 @@ class RecordPage extends StatefulWidget {
 }
 
 class _RecordPageState extends State<RecordPage> {
-  //late final ValueNotifier<Tariffs?> _tariffs;
   late Tariffs thisTariff;
   late Studio thisStudio;
   late User thisUser;
@@ -57,13 +57,11 @@ class _RecordPageState extends State<RecordPage> {
     );
   }
 
-  /*void initState() {
-    initState();
-    _tariffs = ValueNotifier<Tariffs?>(null);
-  }*/
   bool _enabled = false;
 
   int _selectedIndex = -1;
+
+  bool isCompared = false;
 
   @override
   Widget build(BuildContext context) {
@@ -305,25 +303,54 @@ class _RecordPageState extends State<RecordPage> {
             const SizedBox(
               height: 14,
             ),
-            ElevatedButton(
-              onPressed: (() {
-                final record = Record(
-                  studio_id: thisStudio.studio_id,
-                  studio_title: thisStudio.title,
-                  sum: thisStudio.factor * thisTariff.tariff_cost.toDouble(),
-                  tariff_title: thisTariff.tariff_title,
-                  tariff_type: thisTariff.tariff_type,
-                  user_email: thisUser.email.toString(),
-                  user_id: thisUser.id,
-                  user_name: thisUser.name.toString(),
-                  datetime:
-                      '${selectedDate.year}${selectedDate.month}${selectedDate.day}${selectedTime}am',
-                );
-
-                createRecord(record);
-              }),
-              child: const Text('Арендовать'),
-            )
+            StreamBuilder(
+                stream: getRecords(),
+                builder: (context, snapshot) {
+                  return ElevatedButton(
+                    onPressed: (() {
+                      final record = Record(
+                        studio_id: thisStudio.studio_id,
+                        studio_title: thisStudio.title,
+                        sum: thisStudio.factor *
+                            thisTariff.tariff_cost.toDouble(),
+                        tariff_title: thisTariff.tariff_title,
+                        tariff_type: thisTariff.tariff_type,
+                        user_email: thisUser.email.toString(),
+                        user_id: thisUser.id,
+                        user_name: thisUser.name.toString(),
+                        datetime:
+                            '${selectedDate.year}${selectedDate.month}${selectedDate.day}${selectedTime}am',
+                      );
+                      for (int i = 0; i < snapshot.data.docs.length; i++) {
+                        if ('${selectedDate.year}${selectedDate.month}${selectedDate.day}${selectedTime}am' !=
+                            snapshot.data.docs[i].get('datetime')) {
+                          isCompared = true;
+                        }
+                        if ('${selectedDate.year}${selectedDate.month}${selectedDate.day}${selectedTime}am' ==
+                            snapshot.data.docs[i].get('datetime')) {
+                          isCompared = false;
+                          break;
+                        }
+                      }
+                      if (isCompared == true) {
+                        SnackBarService.showSnackBar(
+                          context,
+                          'Успешно арендовано!',
+                          false,
+                        );
+                        createRecord(record);
+                      }
+                      if (isCompared == false) {
+                        SnackBarService.showSnackBar(
+                          context,
+                          'Не удалось арендовать - в это время уже занято!',
+                          true,
+                        );
+                      }
+                    }),
+                    child: const Text('Арендовать'),
+                  );
+                })
           ],
         ),
       ),
@@ -365,70 +392,5 @@ Stream getTariffs() =>
 
 Stream getUsers() => FirebaseFirestore.instance.collection('users').snapshots();
 
-/*getTariffs() async {
-  await FirebaseFirestore.instance.collection('studios').get().then(
-    (querySnapshot) async {
-      querySnapshot.docs.forEach(
-        (result) async {
-          await FirebaseFirestore.instance
-              .collection('studios')
-              .doc(result.id)
-              .collection('tariffs')
-              .get()
-              .then(
-            (querySnapshot) {
-              querySnapshot.docs.forEach(
-                (result) {
-                  Tariffs tariffs = Tariffs.fromDocument(result);
-                },
-              );
-            },
-          );
-        },
-      );
-    },
-  );
-}*/
-
-/*Future getDocID() {
-  return FirebaseFirestore.instance
-      .collection('studios')
-      .doc(isUser)
-      .get()
-      .then(
-    (DocumentSnapshot documentSnapshot) {
-      if (documentSnapshot.exists) {
-        String documentId = documentSnapshot.id;
-      } else {
-        print('Document does not exist');
-      }
-    },
-  );
-}*/
-
-/*class _RadioButton extends StatelessWidget {
-  final String title;
-  final int tariff_cost;
-  final ValueNotifier<Tariffs?> tariffs;
-  final int index;
-  final String type;
-  const _RadioButton({
-    required this.index,
-    required this.tariffs,
-    required this.title,
-    required this.tariff_cost,
-    required this.type,
-    Key? key,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) => AnimatedBuilder(
-        animation: tariffs,
-        builder: (context, _) => Radio(
-            value: tariffs.value = Tariffs.values[index],
-            groupValue: null,
-            onChanged: (_) => tariffs.value = Tariffs.values[index]),
-      );
-}*/
-
-//enum Tariffs { a, b, c }
+Stream getRecords() =>
+    FirebaseFirestore.instance.collection('records').snapshots();
