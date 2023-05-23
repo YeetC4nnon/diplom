@@ -61,8 +61,10 @@ class _AuthorizationPageState extends State<AuthorizationPage> {
       return ElevatedButton(
         onPressed: () {
           try {
-            _registerUser(_nameController.value.toString(),
-                _emailController.value.toString(), _passwordController.value.toString());
+            _registerUser(
+                _nameController.value.toString(),
+                _emailController.value.toString(),
+                _passwordController.value.toString());
           } on FirebaseAuthException catch (e) {
             if (e.code == 'user-not-found' || e.code == 'wrong-password') {
               SnackBarService.showSnackBar(
@@ -85,7 +87,9 @@ class _AuthorizationPageState extends State<AuthorizationPage> {
               isUser;
             },
           );
-          Navigator.of(context).pushNamed('HomePage');
+          if (isUser != null) {
+            Navigator.of(context).pushNamed('HomePage');
+          }
           //print(isUser);
         },
         child: const Text(
@@ -159,7 +163,9 @@ class _AuthorizationPageState extends State<AuthorizationPage> {
               isUser;
             },
           );
-          Navigator.of(context).pushNamed('HomePage');
+          if (isUser != null) {
+            Navigator.of(context).pushNamed('HomePage');
+          }
           //print(isUser);
         },
       );
@@ -244,7 +250,11 @@ class _AuthorizationPageState extends State<AuthorizationPage> {
                         onTap: () {
                           setState(() {
                             showLogin = false;
+                            isUser;
                           });
+                          if (isUser != null) {
+                            Navigator.of(context).pushNamed('HomePage');
+                          }
                         },
                       ),
                     ),
@@ -263,7 +273,11 @@ class _AuthorizationPageState extends State<AuthorizationPage> {
                         onTap: () {
                           setState(() {
                             showLogin = true;
+                            isUser;
                           });
+                          if (isUser != null) {
+                            Navigator.of(context).pushNamed('HomePage');
+                          }
                         },
                       ),
                     ),

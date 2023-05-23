@@ -85,272 +85,281 @@ class _RecordPageState extends State<RecordPage> {
             fit: BoxFit.fill,
           ),
         ),
-        child: Column(
+        child: ListView(
           children: <Widget>[
-            StreamBuilder(
-              stream: getStudios(),
-              builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
-                if (snapshot.hasError) {
-                  return Text(snapshot.error.toString());
-                } else if (snapshot.hasData) {
-                  thisStudio = Studio(
-                    address: snapshot.data!.docs[widget.token].get('address'),
-                    min_cost: snapshot.data!.docs[widget.token].get('min_cost'),
-                    title: snapshot.data!.docs[widget.token].get('title'),
-                    studio_id:
-                        snapshot.data!.docs[widget.token].get('studio_id'),
-                    factor: snapshot.data!.docs[widget.token].get('factor'),
-                  );
-                  return Card(
-                    shadowColor: Colors.black,
-                    margin:
-                        const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-                    color: theme.cardTheme.color,
-                    elevation: theme.cardTheme.elevation,
-                    child: ListTile(
-                      textColor: Colors.white,
-                      leading: Container(
-                        height: 150,
-                        width: 150,
-                        decoration: BoxDecoration(
-                          image: DecorationImage(
-                            image: NetworkImage(
-                              snapshot.data!.docs[widget.token].get('image'),
-                              scale: 1,
+            Column(
+              children: <Widget>[
+                StreamBuilder(
+                  stream: getStudios(),
+                  builder:
+                      (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
+                    if (snapshot.hasError) {
+                      return Text(snapshot.error.toString());
+                    } else if (snapshot.hasData) {
+                      thisStudio = Studio(
+                        address:
+                            snapshot.data!.docs[widget.token].get('address'),
+                        min_cost:
+                            snapshot.data!.docs[widget.token].get('min_cost'),
+                        title: snapshot.data!.docs[widget.token].get('title'),
+                        studio_id:
+                            snapshot.data!.docs[widget.token].get('studio_id'),
+                        factor: snapshot.data!.docs[widget.token].get('factor'),
+                      );
+                      return Card(
+                        shadowColor: Colors.black,
+                        margin: const EdgeInsets.symmetric(
+                            vertical: 8, horizontal: 16),
+                        color: theme.cardTheme.color,
+                        elevation: theme.cardTheme.elevation,
+                        child: ListTile(
+                          textColor: Colors.white,
+                          contentPadding: const EdgeInsets.all(2),
+                          minVerticalPadding: 2,
+                          leading: Container(
+                            height: 75,
+                            width: 75,
+                            decoration: BoxDecoration(
+                              image: DecorationImage(
+                                image: NetworkImage(
+                                  snapshot.data!.docs[widget.token]
+                                      .get('image'),
+                                ),
+                                fit: BoxFit.fill,
+                              ),
                             ),
-                            fit: BoxFit.fitWidth,
+                          ),
+                          title: Text(
+                            snapshot.data!.docs[widget.token].get('title'),
+                            style: const TextStyle(
+                              fontSize: 20,
+                            ),
+                          ),
+                          subtitle: Text(
+                            snapshot.data!.docs[widget.token]
+                                .get('description')
+                                .toString(),
+                            style: const TextStyle(
+                              fontSize: 12,
+                              fontStyle: FontStyle.italic,
+                            ),
                           ),
                         ),
-                      ),
-                      title: Text(
-                        snapshot.data!.docs[widget.token].get('title'),
-                        style: const TextStyle(
-                          fontSize: 20,
-                        ),
-                      ),
-                      subtitle: Text(
-                        snapshot.data!.docs[widget.token]
-                            .get('description')
-                            .toString(),
-                        style: const TextStyle(
-                          fontSize: 12,
-                          fontStyle: FontStyle.italic,
-                        ),
-                      ),
-                    ),
-                  );
-                } else {
-                  return const Center(
-                    child: CircularProgressIndicator(),
-                  );
-                }
-              },
-            ),
-            StreamBuilder(
-              stream: getUsers(),
-              builder: (context, snapshot) {
-                if (snapshot.hasError) {
-                  return const Text('I have a bad feeling about this');
-                } else if (snapshot.hasData) {
-                  thisUser = User(
-                    email: snapshot.data!.docs[0].get('email'),
-                    password: snapshot.data!.docs[0].get('password'),
-                    name: snapshot.data!.docs[0].get('name'),
-                    id: snapshot.data!.docs[0].get('id'),
-                  );
-                  return Card(
-                    margin:
-                        const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-                    elevation: 3,
-                    color: const Color.fromRGBO(60, 65, 85, 1),
-                    child: ListTile(
-                      textColor: Colors.white,
-                      leading: const Icon(
-                        Icons.account_circle,
-                        color: Colors.white,
-                      ),
-                      title: Text(
-                        snapshot.data!.docs[0].get('name'),
-                        style: const TextStyle(
-                          fontSize: 20,
-                        ),
-                      ),
-                      subtitle: Text(
-                        snapshot.data!.docs[0].get('email'),
-                        style: const TextStyle(
-                          fontSize: 12,
-                          fontStyle: FontStyle.italic,
-                        ),
-                      ),
-                    ),
-                  );
-                } else {
-                  return const Center(
-                    child: CircularProgressIndicator(),
-                  );
-                }
-              },
-            ),
-            StreamBuilder(
-              stream: getTariffs(),
-              builder: (BuildContext context, snapshot) {
-                if (snapshot.hasError) {
-                  return Text(snapshot.error.toString());
-                } else if (snapshot.hasData) {
-                  return ListView.separated(
-                    shrinkWrap: true,
-                    itemCount: snapshot.data!.docs.length,
-                    separatorBuilder: (BuildContext context, int index) =>
-                        const SizedBox(
-                      height: 12,
-                    ),
-                    itemBuilder: (context, index) => Card(
-                      margin: const EdgeInsets.symmetric(
-                          vertical: 8, horizontal: 16),
-                      color: theme.cardTheme.color,
-                      elevation: theme.cardTheme.elevation,
-                      child: InkWell(
-                        onTap: () {
-                          setState(() {
-                            _enabled = !_enabled;
-                          });
-                        },
+                      );
+                    } else {
+                      return const Center(
+                        child: CircularProgressIndicator(),
+                      );
+                    }
+                  },
+                ),
+                StreamBuilder(
+                  stream: getUsers(),
+                  builder: (context, snapshot) {
+                    if (snapshot.hasError) {
+                      return const Text('I have a bad feeling about this');
+                    } else if (snapshot.hasData) {
+                      thisUser = User(
+                        email: snapshot.data!.docs[0].get('email'),
+                        password: snapshot.data!.docs[0].get('password'),
+                        name: snapshot.data!.docs[0].get('name'),
+                        id: snapshot.data!.docs[0].get('id'),
+                      );
+                      return Card(
+                        margin: const EdgeInsets.symmetric(
+                            vertical: 8, horizontal: 16),
+                        elevation: 3,
+                        color: const Color.fromRGBO(60, 65, 85, 1),
                         child: ListTile(
-                          leading: Icon(
-                            _enabled
-                                ? Icons.radio_button_off
-                                : Icons.radio_button_checked,
+                          textColor: Colors.white,
+                          leading: const Icon(
+                            Icons.account_circle,
                             color: Colors.white,
                           ),
                           title: Text(
-                            snapshot.data!.docs[index].get('tariff_title'),
-                            style: theme.textTheme.titleMedium,
+                            snapshot.data!.docs[0].get('name'),
+                            style: const TextStyle(
+                              fontSize: 20,
+                            ),
                           ),
                           subtitle: Text(
-                            "${snapshot.data!.docs[index].get('tariff_cost')} руб.",
-                            style: theme.textTheme.titleSmall,
+                            snapshot.data!.docs[0].get('email'),
+                            style: const TextStyle(
+                              fontSize: 12,
+                              fontStyle: FontStyle.italic,
+                            ),
                           ),
-                          trailing: Text(
-                            snapshot.data!.docs[index].get('tariff_type'),
+                        ),
+                      );
+                    } else {
+                      return const Center(
+                        child: CircularProgressIndicator(),
+                      );
+                    }
+                  },
+                ),
+                StreamBuilder(
+                  stream: getTariffs(),
+                  builder: (BuildContext context, snapshot) {
+                    if (snapshot.hasError) {
+                      return Text(snapshot.error.toString());
+                    } else if (snapshot.hasData) {
+                      return ListView.separated(
+                        shrinkWrap: true,
+                        itemCount: snapshot.data!.docs.length,
+                        separatorBuilder: (BuildContext context, int index) =>
+                            const SizedBox(
+                          height: 12,
+                        ),
+                        itemBuilder: (context, index) => Card(
+                          margin: const EdgeInsets.symmetric(
+                              vertical: 8, horizontal: 16),
+                          color: theme.cardTheme.color,
+                          elevation: theme.cardTheme.elevation,
+                          child: InkWell(
+                            onTap: () {
+                              setState(() {
+                                _enabled = !_enabled;
+                              });
+                            },
+                            child: ListTile(
+                              leading: Icon(
+                                _enabled
+                                    ? Icons.radio_button_off
+                                    : Icons.radio_button_checked,
+                                color: Colors.white,
+                              ),
+                              title: Text(
+                                snapshot.data!.docs[index].get('tariff_title'),
+                                style: theme.textTheme.titleMedium,
+                              ),
+                              subtitle: Text(
+                                "${snapshot.data!.docs[index].get('tariff_cost')} руб.",
+                                style: theme.textTheme.titleSmall,
+                              ),
+                              trailing: Text(
+                                snapshot.data!.docs[index].get('tariff_type'),
+                                style: theme.textTheme.titleMedium,
+                              ),
+                              onTap: () {
+                                thisTariff = Tariffs(
+                                  tariff_title: snapshot.data!.docs[index]
+                                      .get('tariff_title'),
+                                  tariff_cost: snapshot.data!.docs[index]
+                                      .get('tariff_cost'),
+                                  tariff_type: snapshot.data!.docs[index]
+                                      .get('tariff_type'),
+                                );
+                                setState(() {
+                                  _selectedIndex = index;
+                                });
+                              },
+                              selected: index == _selectedIndex,
+                              selectedTileColor:
+                                  const Color.fromARGB(255, 8, 22, 83),
+                            ),
+                          ),
+                        ),
+                      );
+                    } else {
+                      return const Center(
+                        child: CircularProgressIndicator(),
+                      );
+                    }
+                  },
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Text(
+                      'Выберите время: ',
+                      style: theme.textTheme.titleMedium,
+                    ),
+                    InkWell(
+                      onTap: _selectDate,
+                      child: Row(
+                        children: <Widget>[
+                          Text(
+                            DateFormat.yMMMd().format(selectedDate),
                             style: theme.textTheme.titleMedium,
                           ),
-                          onTap: () {
-                            thisTariff = Tariffs(
-                              tariff_title: snapshot.data!.docs[index]
-                                  .get('tariff_title'),
-                              tariff_cost:
-                                  snapshot.data!.docs[index].get('tariff_cost'),
-                              tariff_type:
-                                  snapshot.data!.docs[index].get('tariff_type'),
-                            );
-                            setState(() {
-                              _selectedIndex = index;
-                            });
-                          },
-                          selected: index == _selectedIndex,
-                          selectedTileColor:
-                              const Color.fromARGB(255, 8, 22, 83),
-                        ),
+                          const Icon(
+                            Icons.arrow_drop_down,
+                            color: Colors.white,
+                          )
+                        ],
                       ),
                     ),
-                  );
-                } else {
-                  return const Center(
-                    child: CircularProgressIndicator(),
-                  );
-                }
-              },
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                Text(
-                  'Выберите время: ',
-                  style: theme.textTheme.titleMedium,
-                ),
-                InkWell(
-                  onTap: _selectDate,
-                  child: Row(
-                    children: <Widget>[
-                      Text(
-                        DateFormat.yMMMd().format(selectedDate),
-                        style: theme.textTheme.titleMedium,
+                    InkWell(
+                      onTap: _selectTime,
+                      child: Row(
+                        children: <Widget>[
+                          Text(
+                            selectedTime.format(context),
+                            style: theme.textTheme.titleMedium,
+                          ),
+                          const Icon(
+                            Icons.arrow_drop_down,
+                            color: Colors.white,
+                          )
+                        ],
                       ),
-                      const Icon(
-                        Icons.arrow_drop_down,
-                        color: Colors.white,
-                      )
-                    ],
-                  ),
+                    )
+                  ],
                 ),
-                InkWell(
-                  onTap: _selectTime,
-                  child: Row(
-                    children: <Widget>[
-                      Text(
-                        selectedTime.format(context),
-                        style: theme.textTheme.titleMedium,
-                      ),
-                      const Icon(
-                        Icons.arrow_drop_down,
-                        color: Colors.white,
-                      )
-                    ],
-                  ),
-                )
+                const SizedBox(
+                  height: 14,
+                ),
+                StreamBuilder(
+                    stream: getRecords(),
+                    builder: (context, snapshot) {
+                      return ElevatedButton(
+                        onPressed: (() {
+                          final record = Record(
+                            studio_id: thisStudio.studio_id,
+                            studio_title: thisStudio.title,
+                            sum: thisStudio.factor *
+                                thisTariff.tariff_cost.toDouble(),
+                            tariff_title: thisTariff.tariff_title,
+                            tariff_type: thisTariff.tariff_type,
+                            user_email: thisUser.email.toString(),
+                            user_id: thisUser.id,
+                            user_name: thisUser.name.toString(),
+                            datetime:
+                                '${selectedDate.year}${selectedDate.month}${selectedDate.day}${selectedTime}am',
+                          );
+                          for (int i = 0; i < snapshot.data.docs.length; i++) {
+                            if ('${selectedDate.year}${selectedDate.month}${selectedDate.day}${selectedTime}am' !=
+                                snapshot.data.docs[i].get('datetime')) {
+                              isCompared = true;
+                            }
+                            if ('${selectedDate.year}${selectedDate.month}${selectedDate.day}${selectedTime}am' ==
+                                snapshot.data.docs[i].get('datetime')) {
+                              isCompared = false;
+                              break;
+                            }
+                          }
+                          if (isCompared == true) {
+                            SnackBarService.showSnackBar(
+                              context,
+                              'Успешно арендовано!',
+                              false,
+                            );
+                            createRecord(record);
+                          }
+                          if (isCompared == false) {
+                            SnackBarService.showSnackBar(
+                              context,
+                              'Не удалось арендовать - в это время уже занято!',
+                              true,
+                            );
+                          }
+                        }),
+                        child: const Text('Арендовать'),
+                      );
+                    })
               ],
             ),
-            const SizedBox(
-              height: 14,
-            ),
-            StreamBuilder(
-                stream: getRecords(),
-                builder: (context, snapshot) {
-                  return ElevatedButton(
-                    onPressed: (() {
-                      final record = Record(
-                        studio_id: thisStudio.studio_id,
-                        studio_title: thisStudio.title,
-                        sum: thisStudio.factor *
-                            thisTariff.tariff_cost.toDouble(),
-                        tariff_title: thisTariff.tariff_title,
-                        tariff_type: thisTariff.tariff_type,
-                        user_email: thisUser.email.toString(),
-                        user_id: thisUser.id,
-                        user_name: thisUser.name.toString(),
-                        datetime:
-                            '${selectedDate.year}${selectedDate.month}${selectedDate.day}${selectedTime}am',
-                      );
-                      for (int i = 0; i < snapshot.data.docs.length; i++) {
-                        if ('${selectedDate.year}${selectedDate.month}${selectedDate.day}${selectedTime}am' !=
-                            snapshot.data.docs[i].get('datetime')) {
-                          isCompared = true;
-                        }
-                        if ('${selectedDate.year}${selectedDate.month}${selectedDate.day}${selectedTime}am' ==
-                            snapshot.data.docs[i].get('datetime')) {
-                          isCompared = false;
-                          break;
-                        }
-                      }
-                      if (isCompared == true) {
-                        SnackBarService.showSnackBar(
-                          context,
-                          'Успешно арендовано!',
-                          false,
-                        );
-                        createRecord(record);
-                      }
-                      if (isCompared == false) {
-                        SnackBarService.showSnackBar(
-                          context,
-                          'Не удалось арендовать - в это время уже занято!',
-                          true,
-                        );
-                      }
-                    }),
-                    child: const Text('Арендовать'),
-                  );
-                })
           ],
         ),
       ),
