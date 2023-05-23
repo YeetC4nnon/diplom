@@ -106,45 +106,64 @@ class _RecordPageState extends State<RecordPage> {
                             snapshot.data!.docs[widget.token].get('studio_id'),
                         factor: snapshot.data!.docs[widget.token].get('factor'),
                       );
-                      return Card(
-                        shadowColor: Colors.black,
-                        margin: const EdgeInsets.symmetric(
-                            vertical: 8, horizontal: 16),
-                        color: theme.cardTheme.color,
-                        elevation: theme.cardTheme.elevation,
-                        child: ListTile(
-                          textColor: Colors.white,
-                          contentPadding: const EdgeInsets.all(2),
-                          minVerticalPadding: 2,
-                          leading: Container(
-                            height: 75,
-                            width: 75,
-                            decoration: BoxDecoration(
-                              image: DecorationImage(
-                                image: NetworkImage(
-                                  snapshot.data!.docs[widget.token]
-                                      .get('image'),
+                      return Column(
+                        children: <Widget>[
+                          SizedBox(
+                            height: 300,
+                            width: 300,
+                            child: Container(
+                              decoration: BoxDecoration(
+                                image: DecorationImage(
+                                  image: NetworkImage(
+                                    snapshot.data!.docs[widget.token]
+                                        .get('image'),
+                                  ),
+                                  fit: BoxFit.fill,
                                 ),
-                                fit: BoxFit.fill,
                               ),
                             ),
                           ),
-                          title: Text(
-                            snapshot.data!.docs[widget.token].get('title'),
-                            style: const TextStyle(
-                              fontSize: 20,
+                          Card(
+                            shadowColor: Colors.black,
+                            margin: const EdgeInsets.symmetric(
+                                vertical: 8, horizontal: 16),
+                            color: theme.cardTheme.color,
+                            elevation: theme.cardTheme.elevation,
+                            child: ListTile(
+                              textColor: Colors.white,
+                              contentPadding: const EdgeInsets.all(2),
+                              minVerticalPadding: 2,
+                              /*child: Container(
+                                  height: 75,
+                                  width: 75,
+                                  decoration: BoxDecoration(
+                                    image: DecorationImage(
+                                      image: NetworkImage(
+                                        snapshot.data!.docs[widget.token]
+                                            .get('image'),
+                                      ),
+                                      fit: BoxFit.fill,
+                                    ),
+                                  ),
+                                ),*/
+                              title: Text(
+                                snapshot.data!.docs[widget.token].get('title'),
+                                style: const TextStyle(
+                                  fontSize: 20,
+                                ),
+                              ),
+                              subtitle: Text(
+                                snapshot.data!.docs[widget.token]
+                                    .get('description')
+                                    .toString(),
+                                style: const TextStyle(
+                                  fontSize: 12,
+                                  fontStyle: FontStyle.italic,
+                                ),
+                              ),
                             ),
                           ),
-                          subtitle: Text(
-                            snapshot.data!.docs[widget.token]
-                                .get('description')
-                                .toString(),
-                            style: const TextStyle(
-                              fontSize: 12,
-                              fontStyle: FontStyle.italic,
-                            ),
-                          ),
-                        ),
+                        ],
                       );
                     } else {
                       return const Center(
@@ -313,49 +332,53 @@ class _RecordPageState extends State<RecordPage> {
                 StreamBuilder(
                     stream: getRecords(),
                     builder: (context, snapshot) {
-                      return ElevatedButton(
-                        onPressed: (() {
-                          final record = Record(
-                            studio_id: thisStudio.studio_id,
-                            studio_title: thisStudio.title,
-                            sum: thisStudio.factor *
-                                thisTariff.tariff_cost.toDouble(),
-                            tariff_title: thisTariff.tariff_title,
-                            tariff_type: thisTariff.tariff_type,
-                            user_email: thisUser.email.toString(),
-                            user_id: thisUser.id,
-                            user_name: thisUser.name.toString(),
-                            datetime:
-                                '${selectedDate.year}${selectedDate.month}${selectedDate.day}${selectedTime}am',
-                          );
-                          for (int i = 0; i < snapshot.data.docs.length; i++) {
-                            if ('${selectedDate.year}${selectedDate.month}${selectedDate.day}${selectedTime}am' !=
-                                snapshot.data.docs[i].get('datetime')) {
-                              isCompared = true;
-                            }
-                            if ('${selectedDate.year}${selectedDate.month}${selectedDate.day}${selectedTime}am' ==
-                                snapshot.data.docs[i].get('datetime')) {
-                              isCompared = false;
-                              break;
-                            }
-                          }
-                          if (isCompared == true) {
-                            SnackBarService.showSnackBar(
-                              context,
-                              'Успешно арендовано!',
-                              false,
+                      return Container(
+                        margin: EdgeInsets.only(bottom: 20),
+                        child: ElevatedButton(
+                          
+                          onPressed: (() {
+                            final record = Record(
+                              studio_id: thisStudio.studio_id,
+                              studio_title: thisStudio.title,
+                              sum: thisStudio.factor *
+                                  thisTariff.tariff_cost.toDouble(),
+                              tariff_title: thisTariff.tariff_title,
+                              tariff_type: thisTariff.tariff_type,
+                              user_email: thisUser.email.toString(),
+                              user_id: thisUser.id,
+                              user_name: thisUser.name.toString(),
+                              datetime:
+                                  '${selectedDate.year}${selectedDate.month}${selectedDate.day}${selectedTime}am',
                             );
-                            createRecord(record);
-                          }
-                          if (isCompared == false) {
-                            SnackBarService.showSnackBar(
-                              context,
-                              'Не удалось арендовать - в это время уже занято!',
-                              true,
-                            );
-                          }
-                        }),
-                        child: const Text('Арендовать'),
+                            for (int i = 0; i < snapshot.data.docs.length; i++) {
+                              if ('${selectedDate.year}${selectedDate.month}${selectedDate.day}${selectedTime}am' !=
+                                  snapshot.data.docs[i].get('datetime')) {
+                                isCompared = true;
+                              }
+                              if ('${selectedDate.year}${selectedDate.month}${selectedDate.day}${selectedTime}am' ==
+                                  snapshot.data.docs[i].get('datetime')) {
+                                isCompared = false;
+                                break;
+                              }
+                            }
+                            if (isCompared == true) {
+                              SnackBarService.showSnackBar(
+                                context,
+                                'Успешно арендовано!',
+                                false,
+                              );
+                              createRecord(record);
+                            }
+                            if (isCompared == false) {
+                              SnackBarService.showSnackBar(
+                                context,
+                                'Не удалось арендовать - в это время уже занято!',
+                                true,
+                              );
+                            }
+                          }),
+                          child: const Text('Арендовать'),
+                        ),
                       );
                     })
               ],
