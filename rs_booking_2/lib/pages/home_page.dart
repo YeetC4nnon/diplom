@@ -67,10 +67,10 @@ class HomePage extends StatelessWidget {
                           snapshot.data!.docs[index].get('title'),
                           style: theme.textTheme.titleMedium,
                         ),
-                        subtitle: Text(
+                        /*subtitle: Text(
                           "От: ${snapshot.data!.docs[index].get('min_cost')} руб.",
                           style: theme.textTheme.titleSmall,
-                        ),
+                        ),*/
                         trailing: const Icon(
                           Icons.arrow_forward_ios,
                           color: Colors.white,
