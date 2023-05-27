@@ -1,5 +1,6 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:rs_booking_2/pages/record_page.dart';
 
@@ -18,6 +19,18 @@ class HomePage extends StatelessWidget {
           style: theme.textTheme.titleLarge,
         ),
         backgroundColor: theme.appBarTheme.backgroundColor,
+        actions: [
+          Container(
+            alignment: Alignment.centerRight,
+            child: GestureDetector(
+              child: const Text(
+                'Выйти',
+                style: TextStyle(fontSize: 20, color: Colors.white),
+              ),
+              onTap: () => FirebaseAuth.instance.signOut(),
+            ),
+          ),
+        ],
       ),
       body: Container(
         height: double.infinity,

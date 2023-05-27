@@ -51,13 +51,13 @@ class Studio {
 }
 
 @JsonSerializable()
-class User {
+class thisUser {
   late String name;
   late String email;
   late String password;
   String id;
 
-  User({
+  thisUser({
     required this.email,
     required this.password,
     required this.name,
@@ -71,7 +71,7 @@ class User {
         'id': id,
       };
 
-  static User fromJson(Map<String, dynamic> json) => User(
+  static thisUser fromJson(Map<String, dynamic> json) => thisUser(
         name: json['name'],
         email: json['email'],
         password: json['password'],

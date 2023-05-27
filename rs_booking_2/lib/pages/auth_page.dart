@@ -456,7 +456,7 @@ class _StudioAuthorizationPageState extends State<StudioAuthorizationPage> {
                                   context,
                                   MaterialPageRoute(
                                     builder: (context) => StudioPage(
-                                        token: _loginController.text.toString()),
+                                        token: snapshot.data!.docs[i].get('login')),
                                   ),
                                 );
                                 SnackBarService.showSnackBar(context, 'Данные введены верно', false);

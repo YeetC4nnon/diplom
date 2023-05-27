@@ -4,7 +4,6 @@ import 'package:rs_booking_2/firebase_options.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:rs_booking_2/pages/auth_page.dart';
 import 'package:rs_booking_2/pages/home_page.dart';
-import 'package:rs_booking_2/pages/studio_page.dart';
 
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();

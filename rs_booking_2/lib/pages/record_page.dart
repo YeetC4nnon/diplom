@@ -2,10 +2,13 @@
 
 import 'package:auto_route/auto_route.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:rs_booking_2/services/models.dart';
 import 'package:rs_booking_2/services/snack_bar.dart';
+
+
 
 @RoutePage<void>()
 class RecordPage extends StatefulWidget {
@@ -22,7 +25,7 @@ class RecordPage extends StatefulWidget {
 class _RecordPageState extends State<RecordPage> {
   late Tariffs thisTariff;
   late Studio thisStudio;
-  late User thisUser;
+  late thisUser thisIsUser;
 
   DateTime selectedDate = DateTime.now();
   TimeOfDay selectedTime = const TimeOfDay(hour: 9, minute: 30);
@@ -74,6 +77,18 @@ class _RecordPageState extends State<RecordPage> {
           style: theme.textTheme.titleLarge,
         ),
         backgroundColor: theme.appBarTheme.backgroundColor,
+        actions: [
+          Container(
+            alignment: Alignment.centerRight,
+            child: GestureDetector(
+              child: const Text(
+                'Выйти',
+                style: TextStyle(fontSize: 20, color: Colors.white),
+              ),
+              onTap: () => FirebaseAuth.instance.signOut(),
+            ),
+          ),
+        ],
       ),
       body: Container(
         height: double.infinity,
@@ -180,7 +195,7 @@ class _RecordPageState extends State<RecordPage> {
                     } else if (snapshot.hasData) {
                       for (int i = 0; i < snapshot.data!.docs.length; i++) {
                         if (isUser == snapshot.data!.docs[i].get('id')) {
-                          thisUser = User(
+                          thisIsUser = thisUser(
                             email: snapshot.data!.docs[i].get('email'),
                             password: snapshot.data!.docs[i].get('password'),
                             name: snapshot.data!.docs[i].get('name'),
@@ -350,9 +365,9 @@ class _RecordPageState extends State<RecordPage> {
                                   thisTariff.tariff_cost.toDouble(),
                               tariff_title: thisTariff.tariff_title,
                               tariff_type: thisTariff.tariff_type,
-                              user_email: thisUser.email.toString(),
-                              user_id: thisUser.id,
-                              user_name: thisUser.name.toString(),
+                              user_email: thisIsUser.email.toString(),
+                              user_id: thisIsUser.id,
+                              user_name: thisIsUser.name.toString(),
                               datetime:
                                   '${selectedDate.year}${selectedDate.month}${selectedDate.day}${selectedTime}am',
                               login: thisStudio.login,

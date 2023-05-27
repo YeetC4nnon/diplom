@@ -1,5 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:rs_booking_2/pages/record_page.dart';
 
 class StudioPage extends StatefulWidget {
   const StudioPage({
@@ -36,84 +36,64 @@ class _StudioPageState extends State<StudioPage> {
           ),
         ),
         child: StreamBuilder(
-          stream: getRecords(),
+          stream: FirebaseFirestore.instance
+              .collection('records')
+              .where('login', isEqualTo: widget.token)
+              .snapshots(),
           builder: (BuildContext context, snapshot) {
             if (snapshot.hasError) {
               return Text(snapshot.error.toString());
             } else if (snapshot.hasData) {
-              return StreamBuilder(
-                stream: getStudios(),
-                builder: (BuildContext context, snapshot) {
-                  if (snapshot.hasError) {
-                    return Text(snapshot.error.toString());
-                  } else if (snapshot.hasData) {
-                    for (int i = 0; i < snapshot.data!.docs.length;) {
-                      if (snapshot.data!.docs[i].get('login') ==
-                          widget.token) {
-                        return ListView.separated(
-                          shrinkWrap: true,
-                          itemCount: snapshot.data!.docs.length,
-                          separatorBuilder:
-                              (BuildContext context, int index) => Divider(
-                            color: theme.dividerTheme.color,
-                          ),
-                          itemBuilder: (context, index) => Card(
-                            margin: const EdgeInsets.symmetric(
-                                vertical: 8, horizontal: 16),
-                            elevation: 3,
-                            color: const Color.fromRGBO(60, 65, 85, 1),
-                            child: ListTile(
-                              textColor: Colors.white,
-                              leading: const Icon(
-                                Icons.account_circle,
-                                color: Colors.white,
-                              ),
-                              title: Text(
-                                snapshot.data!.docs[index].get('user_name'),
-                                style: const TextStyle(
-                                  fontSize: 20,
-                                ),
-                              ),
-                              subtitle: Text(
-                                snapshot.data!.docs[index].get('datetime'),
-                                style: const TextStyle(
-                                  fontSize: 16,
-                                ),
-                              ),
-                              trailing: Text(
-                                snapshot.data!.docs[index].get('user_email'),
-                                style: const TextStyle(
-                                  fontSize: 12,
-                                  fontStyle: FontStyle.italic,
-                                ),
-                              ),
-                            ),
-                          ),
-                        );
-                      } else {
-                        return Card(
-                          margin: const EdgeInsets.symmetric(
-                              vertical: 8, horizontal: 16),
-                          elevation: 3,
-                          color: const Color.fromRGBO(60, 65, 85, 1),
-                          child: Center(
-                            child: Text(
-                              'В вашу студию нет записей.',
-                              style: theme.textTheme.titleLarge,
-                            ),
-                          ),
-                        );
-                      }
-                    }
-                  }
-                  return const Center(
-                    child: CircularProgressIndicator(),
-                  );
-                },
+              return ListView.separated(
+                shrinkWrap: true,
+                itemCount: snapshot.data!.docs.length,
+                separatorBuilder: (BuildContext context, int index) => Divider(
+                  color: theme.dividerTheme.color,
+                ),
+                itemBuilder: (context, index) => Card(
+                  margin:
+                      const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+                  elevation: 3,
+                  color: const Color.fromRGBO(60, 65, 85, 1),
+                  child: ListTile(
+                    textColor: Colors.white,
+                    leading: const Icon(
+                      Icons.account_circle,
+                      color: Colors.white,
+                    ),
+                    title: Text(
+                      snapshot.data!.docs[index].get('user_name'),
+                      style: const TextStyle(
+                        fontSize: 16,
+                      ),
+                    ),
+                    subtitle: Text(
+                      snapshot.data!.docs[index].get('datetime'),
+                      style: const TextStyle(
+                        fontSize: 12,
+                      ),
+                    ),
+                    trailing: Text(
+                      snapshot.data!.docs[index].get('user_email'),
+                      style: const TextStyle(
+                        fontSize: 10,
+                        fontStyle: FontStyle.italic,
+                      ),
+                    ),
+                  ),
+                ),
               );
             } else {
-              return const Center(
-                child: CircularProgressIndicator(),
+              return Card(
+                margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+                elevation: 3,
+                color: const Color.fromRGBO(60, 65, 85, 1),
+                child: Center(
+                  child: Text(
+                    'В вашу студию нет записей.',
+                    style: theme.textTheme.titleLarge,
+                  ),
+                ),
               );
             }
           },
