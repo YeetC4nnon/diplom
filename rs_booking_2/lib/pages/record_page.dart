@@ -178,43 +178,50 @@ class _RecordPageState extends State<RecordPage> {
                     if (snapshot.hasError) {
                       return const Text('I have a bad feeling about this');
                     } else if (snapshot.hasData) {
-                      thisUser = User(
-                        email: snapshot.data!.docs[0].get('email'),
-                        password: snapshot.data!.docs[0].get('password'),
-                        name: snapshot.data!.docs[0].get('name'),
-                        id: snapshot.data!.docs[0].get('id'),
-                      );
-                      return Card(
-                        margin: const EdgeInsets.symmetric(
-                            vertical: 8, horizontal: 16),
-                        elevation: 3,
-                        color: const Color.fromRGBO(60, 65, 85, 1),
-                        child: ListTile(
-                          textColor: Colors.white,
-                          leading: const Icon(
-                            Icons.account_circle,
-                            color: Colors.white,
-                          ),
-                          title: Text(
-                            snapshot.data!.docs[0].get('name'),
-                            style: const TextStyle(
-                              fontSize: 20,
+                      for (int i = 0; i < snapshot.data!.docs.length; i++) {
+                        if (isUser == snapshot.data!.docs[i].get('id')) {
+                          thisUser = User(
+                            email: snapshot.data!.docs[i].get('email'),
+                            password: snapshot.data!.docs[i].get('password'),
+                            name: snapshot.data!.docs[i].get('name'),
+                            id: snapshot.data!.docs[i].get('id'),
+                          );
+                          return Card(
+                            margin: const EdgeInsets.symmetric(
+                                vertical: 8, horizontal: 16),
+                            elevation: 3,
+                            color: const Color.fromRGBO(60, 65, 85, 1),
+                            child: ListTile(
+                              textColor: Colors.white,
+                              leading: const Icon(
+                                Icons.account_circle,
+                                color: Colors.white,
+                              ),
+                              title: Text(
+                                snapshot.data!.docs[i].get('name'),
+                                style: const TextStyle(
+                                  fontSize: 20,
+                                ),
+                              ),
+                              subtitle: Text(
+                                snapshot.data!.docs[i].get('email'),
+                                style: const TextStyle(
+                                  fontSize: 12,
+                                  fontStyle: FontStyle.italic,
+                                ),
+                              ),
                             ),
-                          ),
-                          subtitle: Text(
-                            snapshot.data!.docs[0].get('email'),
-                            style: const TextStyle(
-                              fontSize: 12,
-                              fontStyle: FontStyle.italic,
-                            ),
-                          ),
-                        ),
-                      );
+                          );
+                        }
+                      }
                     } else {
                       return const Center(
                         child: CircularProgressIndicator(),
                       );
                     }
+                    return const Center(
+                      child: CircularProgressIndicator(),
+                    );
                   },
                 ),
                 StreamBuilder(
@@ -333,9 +340,8 @@ class _RecordPageState extends State<RecordPage> {
                     stream: getRecords(),
                     builder: (context, snapshot) {
                       return Container(
-                        margin: EdgeInsets.only(bottom: 20),
+                        margin: const EdgeInsets.only(bottom: 20),
                         child: ElevatedButton(
-                          
                           onPressed: (() {
                             final record = Record(
                               studio_id: thisStudio.studio_id,
@@ -349,8 +355,11 @@ class _RecordPageState extends State<RecordPage> {
                               user_name: thisUser.name.toString(),
                               datetime:
                                   '${selectedDate.year}${selectedDate.month}${selectedDate.day}${selectedTime}am',
+                              login: thisStudio.login,
                             );
-                            for (int i = 0; i < snapshot.data.docs.length; i++) {
+                            for (int i = 0;
+                                i < snapshot.data.docs.length;
+                                i++) {
                               if ('${selectedDate.year}${selectedDate.month}${selectedDate.day}${selectedTime}am' !=
                                   snapshot.data.docs[i].get('datetime')) {
                                 isCompared = true;

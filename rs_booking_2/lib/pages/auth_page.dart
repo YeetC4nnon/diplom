@@ -5,6 +5,8 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:rs_booking_2/pages/home_page.dart';
+import 'package:rs_booking_2/pages/studio_page.dart';
 import 'package:rs_booking_2/services/models.dart';
 import 'package:rs_booking_2/services/snack_bar.dart';
 
@@ -283,6 +285,16 @@ class _AuthorizationPageState extends State<AuthorizationPage> {
                     ),
                   ],
                 )),
+          Padding(
+            padding: const EdgeInsets.all(10),
+            child: GestureDetector(
+              child: const Text(
+                'Войти как сотрудник студии',
+                style: TextStyle(fontSize: 20, color: Colors.white),
+              ),
+              onTap: () => Navigator.of(context).pushNamed('StudioAuthPage'),
+            ),
+          ),
           _bottomWave(),
         ],
       ),
@@ -366,4 +378,120 @@ Widget _input(
       ),
     ),
   );
+}
+
+class StudioAuthorizationPage extends StatefulWidget {
+  const StudioAuthorizationPage({Key? key}) : super(key: key);
+
+  @override
+  State<StudioAuthorizationPage> createState() =>
+      _StudioAuthorizationPageState();
+}
+
+class _StudioAuthorizationPageState extends State<StudioAuthorizationPage> {
+  @override
+  Widget build(BuildContext context) {
+    final TextEditingController _loginController = TextEditingController();
+    final TextEditingController _passwordController = TextEditingController();
+
+    Widget _studioLoginForm() {
+      return Column(children: <Widget>[
+        Padding(
+          padding: const EdgeInsets.only(bottom: 20, top: 10),
+          child:
+              _input(const Icon(Icons.email), "Логин", _loginController, false),
+        ),
+        Padding(
+          padding: const EdgeInsets.only(bottom: 20, top: 10),
+          child: _input(
+              const Icon(Icons.lock), "Пароль", _passwordController, true),
+        ),
+      ]);
+    }
+
+    return Scaffold(
+      resizeToAvoidBottomInset: false,
+      backgroundColor: const Color.fromRGBO(50, 65, 85, 1),
+      body: Column(
+        children: <Widget>[
+          _logo(),
+          const SizedBox(
+            height: 100,
+          ),
+          StreamBuilder(
+            stream: getStudios(),
+            builder: (BuildContext context, snapshot) {
+              if (snapshot.hasError) {
+                return Text(snapshot.error.toString());
+              } else if (snapshot.hasData) {
+                return Column(
+                  children: <Widget>[
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    _studioLoginForm(),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 20, right: 20),
+                      child: SizedBox(
+                        height: 50,
+                        width: MediaQuery.of(context).size.width,
+                        child: ElevatedButton(
+                          child: const Text(
+                            'Авторизация',
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 20,
+                              color: Colors.white,
+                            ),
+                          ),
+                          onPressed: () {
+                            for (int i = 0;
+                                i < snapshot.data!.docs.length;
+                                i++) {
+                              if (snapshot.data!.docs[i].get('login') ==
+                                      _loginController.text &&
+                                  snapshot.data!.docs[i].get('password') ==
+                                      _passwordController.text) {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => StudioPage(
+                                        token: _loginController.text.toString()),
+                                  ),
+                                );
+                                SnackBarService.showSnackBar(context, 'Данные введены верно', false);
+                                break;
+                              } else {
+                                SnackBarService.showSnackBar(
+                                    context, 'Неверные данные', true);
+                              }
+                            }
+                          },
+                        ),
+                      ),
+                    ),
+                  ],
+                );
+              } else {
+                return const Center(
+                  child: CircularProgressIndicator(),
+                );
+              }
+            },
+          ),
+          Padding(
+            padding: const EdgeInsets.all(10),
+            child: GestureDetector(
+              child: const Text(
+                'Войти как пользователь',
+                style: TextStyle(fontSize: 20, color: Colors.white),
+              ),
+              onTap: () => Navigator.of(context).pushNamed('/'),
+            ),
+          ),
+          _bottomWave(),
+        ],
+      ),
+    );
+  }
 }

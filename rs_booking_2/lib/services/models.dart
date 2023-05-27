@@ -13,6 +13,8 @@ class Studio {
   late String description;
   int studio_id;
   double factor;
+  late String login;
+  late String password;
 
   Studio({
     required this.title,
@@ -21,6 +23,8 @@ class Studio {
     this.description = '',
     required this.studio_id,
     required this.factor,
+    this.login = '',
+    this.password = '',
   });
 
   Map<String, dynamic> toJson() => {
@@ -30,6 +34,8 @@ class Studio {
         'description': description,
         'studio_id': studio_id,
         'factor': factor,
+        'login': login,
+        'password': password,
       };
 
   static Studio fromJson(Map<String, dynamic> json) => Studio(
@@ -39,6 +45,8 @@ class Studio {
         description: json['description'],
         studio_id: json['studio_id'],
         factor: json['factor'],
+        login: json['login'],
+        password: json['password'],
       );
 }
 
@@ -82,6 +90,7 @@ class Record {
   late String tariff_title;
   late String tariff_type;
   late String datetime;
+  late String login;
 
   Record({
     required this.studio_id,
@@ -93,6 +102,7 @@ class Record {
     required this.tariff_title,
     required this.tariff_type,
     required this.datetime,
+    required this.login,
   });
 
   Map<String, dynamic> toJson() => {
@@ -105,6 +115,7 @@ class Record {
         'tariff_title': tariff_title,
         'tariff_type': tariff_type,
         'datetime': datetime,
+        'login': login,
       };
 
   static Record fromJson(Map<String, dynamic> json) => Record(
@@ -117,5 +128,6 @@ class Record {
         tariff_title: json['tariff_title'],
         tariff_type: json['tariff_type'],
         datetime: json['datetime'],
+        login: json['login'],
       );
 }
