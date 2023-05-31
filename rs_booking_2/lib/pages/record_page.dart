@@ -337,11 +337,11 @@ class _RecordPageState extends State<RecordPage> {
                           ? const Text('Выберите время')
                           : Text(
                               dropDownValue,
-                              style: const TextStyle(color: Colors.blue),
+                              style: const TextStyle(color: Colors.white),
                             ),
                       isExpanded: false,
                       iconSize: 30.0,
-                      style: const TextStyle(color: Colors.blue),
+                      style: const TextStyle(color: Colors.white),
                       items: [
                         '09:00-10:00',
                         '10:00-11:00',
