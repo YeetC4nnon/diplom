@@ -8,8 +8,6 @@ import 'package:intl/intl.dart';
 import 'package:rs_booking_2/services/models.dart';
 import 'package:rs_booking_2/services/snack_bar.dart';
 
-
-
 @RoutePage<void>()
 class RecordPage extends StatefulWidget {
   const RecordPage({
@@ -29,6 +27,7 @@ class _RecordPageState extends State<RecordPage> {
 
   DateTime selectedDate = DateTime.now();
   TimeOfDay selectedTime = const TimeOfDay(hour: 9, minute: 30);
+  String dropDownValue = '';
 
   _selectDate() async {
     final DateTime? date = await showDatePicker(
@@ -112,15 +111,17 @@ class _RecordPageState extends State<RecordPage> {
                       return Text(snapshot.error.toString());
                     } else if (snapshot.hasData) {
                       thisStudio = Studio(
-                        address:
-                            snapshot.data!.docs[widget.token].get('address'),
-                        min_cost:
-                            snapshot.data!.docs[widget.token].get('min_cost'),
-                        title: snapshot.data!.docs[widget.token].get('title'),
-                        studio_id:
-                            snapshot.data!.docs[widget.token].get('studio_id'),
-                        factor: snapshot.data!.docs[widget.token].get('factor'),
-                      );
+                          address:
+                              snapshot.data!.docs[widget.token].get('address'),
+                          min_cost:
+                              snapshot.data!.docs[widget.token].get('min_cost'),
+                          title: snapshot.data!.docs[widget.token].get('title'),
+                          studio_id: snapshot.data!.docs[widget.token]
+                              .get('studio_id'),
+                          factor:
+                              snapshot.data!.docs[widget.token].get('factor'),
+                          login:
+                              snapshot.data!.docs[widget.token].get('login'));
                       return Column(
                         children: <Widget>[
                           SizedBox(
@@ -331,21 +332,45 @@ class _RecordPageState extends State<RecordPage> {
                         ],
                       ),
                     ),
-                    InkWell(
-                      onTap: _selectTime,
-                      child: Row(
-                        children: <Widget>[
-                          Text(
-                            selectedTime.format(context),
-                            style: theme.textTheme.titleMedium,
-                          ),
-                          const Icon(
-                            Icons.arrow_drop_down,
-                            color: Colors.white,
-                          )
-                        ],
-                      ),
-                    )
+                    DropdownButton(
+                      hint: dropDownValue == null
+                          ? const Text('Выберите время')
+                          : Text(
+                              dropDownValue,
+                              style: const TextStyle(color: Colors.blue),
+                            ),
+                      isExpanded: false,
+                      iconSize: 30.0,
+                      style: const TextStyle(color: Colors.blue),
+                      items: [
+                        '09:00-10:00',
+                        '10:00-11:00',
+                        '11:00-12:00',
+                        '12:00-13:00',
+                        '13:00-14:00',
+                        '14:00-15:00',
+                        '15:00-16:00',
+                        '16:00-17:00',
+                        '17:00-18:00',
+                        '19:00-20:00',
+                        '20:00-21:00',
+                        '21:00-22:00',
+                      ].map(
+                        (val) {
+                          return DropdownMenuItem<String>(
+                            value: val,
+                            child: Text(val),
+                          );
+                        },
+                      ).toList(),
+                      onChanged: (val) {
+                        setState(
+                          () {
+                            dropDownValue = val!;
+                          },
+                        );
+                      },
+                    ),
                   ],
                 ),
                 const SizedBox(
@@ -369,17 +394,17 @@ class _RecordPageState extends State<RecordPage> {
                               user_id: thisIsUser.id,
                               user_name: thisIsUser.name.toString(),
                               datetime:
-                                  '${selectedDate.year}${selectedDate.month}${selectedDate.day}${selectedTime}am',
+                                  '${selectedDate.year}${selectedDate.month}${selectedDate.day}$dropDownValue',
                               login: thisStudio.login,
                             );
                             for (int i = 0;
                                 i < snapshot.data.docs.length;
                                 i++) {
-                              if ('${selectedDate.year}${selectedDate.month}${selectedDate.day}${selectedTime}am' !=
+                              if ('${selectedDate.year}${selectedDate.month}${selectedDate.day}$dropDownValue' !=
                                   snapshot.data.docs[i].get('datetime')) {
                                 isCompared = true;
                               }
-                              if ('${selectedDate.year}${selectedDate.month}${selectedDate.day}${selectedTime}am' ==
+                              if ('${selectedDate.year}${selectedDate.month}${selectedDate.day}$dropDownValue' ==
                                   snapshot.data.docs[i].get('datetime')) {
                                 isCompared = false;
                                 break;
@@ -400,6 +425,9 @@ class _RecordPageState extends State<RecordPage> {
                                 true,
                               );
                             }
+                            /*if (selectedDate < DateTime.now()) {
+
+                            }*/
                           }),
                           child: const Text('Арендовать'),
                         ),
