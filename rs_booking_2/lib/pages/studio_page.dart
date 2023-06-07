@@ -56,15 +56,20 @@ class _StudioPageState extends State<StudioPage> {
                   elevation: 3,
                   color: const Color.fromRGBO(60, 65, 85, 1),
                   child: ListTile(
+                    dense: true,
                     textColor: Colors.white,
-                    leading: const Icon(
-                      Icons.account_circle,
-                      color: Colors.white,
-                    ),
-                    title: Text(
+                    leading: Text(
                       snapshot.data!.docs[index].get('user_name'),
                       style: const TextStyle(
-                        fontSize: 16,
+                        fontSize: 14,
+                      ),
+                    ),
+                    title: Text(
+                      snapshot.data!.docs[index].get('tariff_title') +
+                          '/' +
+                          snapshot.data!.docs[index].get('sum').toString(),
+                      style: const TextStyle(
+                        fontSize: 14,
                       ),
                     ),
                     subtitle: Text(

@@ -45,7 +45,7 @@ class _RecordPageState extends State<RecordPage> {
     );
   }
 
-  _selectTime() async {
+  /*_selectTime() async {
     final TimeOfDay? time = await showTimePicker(
       context: context,
       initialTime: selectedTime,
@@ -57,7 +57,7 @@ class _RecordPageState extends State<RecordPage> {
         selectedTime = time;
       },
     );
-  }
+  }*/
 
   bool _enabled = false;
 
@@ -333,6 +333,7 @@ class _RecordPageState extends State<RecordPage> {
                       ),
                     ),
                     DropdownButton(
+                      dropdownColor: Colors.blue,
                       hint: dropDownValue == null
                           ? const Text('Выберите время')
                           : Text(
@@ -394,17 +395,17 @@ class _RecordPageState extends State<RecordPage> {
                               user_id: thisIsUser.id,
                               user_name: thisIsUser.name.toString(),
                               datetime:
-                                  '${selectedDate.year}${selectedDate.month}${selectedDate.day}$dropDownValue',
+                                  '${selectedDate.year}.${selectedDate.month}.${selectedDate.day}.$dropDownValue',
                               login: thisStudio.login,
                             );
                             for (int i = 0;
                                 i < snapshot.data.docs.length;
                                 i++) {
-                              if ('${selectedDate.year}${selectedDate.month}${selectedDate.day}$dropDownValue' !=
+                              if ('${selectedDate.year}.${selectedDate.month}.${selectedDate.day}.$dropDownValue' !=
                                   snapshot.data.docs[i].get('datetime')) {
                                 isCompared = true;
                               }
-                              if ('${selectedDate.year}${selectedDate.month}${selectedDate.day}$dropDownValue' ==
+                              if ('${selectedDate.year}.${selectedDate.month}.${selectedDate.day}.$dropDownValue' ==
                                   snapshot.data.docs[i].get('datetime')) {
                                 isCompared = false;
                                 break;
@@ -413,7 +414,7 @@ class _RecordPageState extends State<RecordPage> {
                             if (isCompared == true) {
                               SnackBarService.showSnackBar(
                                 context,
-                                'Успешно арендовано!',
+                                'Успешно арендовано! С Вами свяжется сотрудник по почте.',
                                 false,
                               );
                               createRecord(record);
