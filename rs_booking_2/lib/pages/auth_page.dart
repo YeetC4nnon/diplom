@@ -41,6 +41,9 @@ class _AuthorizationPageState extends State<AuthorizationPage> {
           email: _emailController.text.trim(),
           password: _passwordController.text.trim(),
         );
+        updateState() {
+          isUser;
+        }
 
         // Создаем новый документ в коллекции 'users'
         final newUserRef = usersRef.doc(userCredential.user!.uid);
@@ -111,6 +114,9 @@ class _AuthorizationPageState extends State<AuthorizationPage> {
           email: _emailController.text.trim(),
           password: _passwordController.text.trim(),
         );
+        updateState() {
+          isUser;
+        }
       } on FirebaseAuthException catch (e) {
         if (e.code == 'user-not-found' || e.code == 'wrong-password') {
           SnackBarService.showSnackBar(
@@ -456,10 +462,12 @@ class _StudioAuthorizationPageState extends State<StudioAuthorizationPage> {
                                   context,
                                   MaterialPageRoute(
                                     builder: (context) => StudioPage(
-                                        token: snapshot.data!.docs[i].get('login')),
+                                        token: snapshot.data!.docs[i]
+                                            .get('login')),
                                   ),
                                 );
-                                SnackBarService.showSnackBar(context, 'Данные введены верно', false);
+                                SnackBarService.showSnackBar(
+                                    context, 'Данные введены верно', false);
                                 break;
                               } else {
                                 SnackBarService.showSnackBar(

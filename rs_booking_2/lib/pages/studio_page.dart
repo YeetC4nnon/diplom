@@ -67,7 +67,7 @@ class _StudioPageState extends State<StudioPage> {
                     title: Text(
                       snapshot.data!.docs[index].get('tariff_title') +
                           '/' +
-                          snapshot.data!.docs[index].get('sum').toString(),
+                          snapshot.data!.docs[index].get('sum').toString() + ' руб.',
                       style: const TextStyle(
                         fontSize: 14,
                       ),
