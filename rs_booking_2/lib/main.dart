@@ -4,6 +4,8 @@ import 'package:rs_booking_2/firebase_options.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:rs_booking_2/pages/auth_page.dart';
 import 'package:rs_booking_2/pages/home_page.dart';
+import 'package:rs_booking_2/pages/user_page.dart';
+import 'package:rs_booking_2/services/models.dart';
 
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -29,6 +31,7 @@ class rs_booking_2 extends StatelessWidget {
         '/': (context) => const AuthorizationPage(),
         'HomePage': (context) => const HomePage(),
         'StudioAuthPage': (context) => const StudioAuthorizationPage(),
+        'UserPage':(context) => UserPage(token: isUser.toString()),
       },
       title: 'RS-Booking',
       theme: ThemeData(

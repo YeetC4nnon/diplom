@@ -3,15 +3,66 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:rs_booking_2/pages/record_page.dart';
+import 'package:rs_booking_2/pages/user_page.dart';
+import 'package:rs_booking_2/services/models.dart';
 
 @RoutePage<void>()
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
+
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  int _selectedIndex = 0;
+
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+      _selectedIndex == 0
+          ? const HomePage()
+          : UserPage(
+              token: isUser.toString(),
+            );
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return Scaffold(
+      bottomNavigationBar: BottomNavigationBar(
+        backgroundColor: Colors.blue,
+        items: const <BottomNavigationBarItem>[
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home),
+            label: 'Главная',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.account_box),
+            label: 'Личный кабинет',
+          ),
+        ],
+        currentIndex: _selectedIndex,
+        selectedItemColor: Colors.amber[800],
+        onTap: (index) {
+          setState(() {
+            _selectedIndex = index;
+            _selectedIndex == 0
+                ? Navigator.of(context).pushNamed('HomePage')
+                : _selectedIndex == 1
+                    ? Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) =>
+                              UserPage(token: isUser.toString()),
+                        ),
+                      )
+                    : ProgressIndicator;
+          });
+        },
+      ),
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
         title: Text(
