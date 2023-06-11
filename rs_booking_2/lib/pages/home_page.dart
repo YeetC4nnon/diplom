@@ -78,7 +78,10 @@ class _HomePageState extends State<HomePage> {
                 'Выйти',
                 style: TextStyle(fontSize: 20, color: Colors.white),
               ),
-              onTap: () => FirebaseAuth.instance.signOut(),
+              onTap: () {
+                FirebaseAuth.instance.signOut();
+                Navigator.of(context).pushNamed('/');
+              }
             ),
           ),
         ],
