@@ -8,7 +8,7 @@ var isUser = FirebaseAuth.instance.currentUser?.uid;
 @JsonSerializable()
 class Studio {
   late String title;
-  double min_cost;
+  int min_cost;
   late String address;
   late String description;
   int studio_id;

@@ -37,7 +37,7 @@ class rs_booking_2 extends StatelessWidget {
       theme: ThemeData(
         textTheme: TextTheme(
           titleMedium: const TextStyle(
-            fontSize: 20,
+            fontSize: 16,
             color: Colors.white,
           ),
           titleSmall: TextStyle(

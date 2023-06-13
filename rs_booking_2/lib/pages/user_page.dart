@@ -61,7 +61,7 @@ class _UserPageState extends State<UserPage> {
                     leading: Text(
                       snapshot.data!.docs[index].get('studio_title'),
                       style: const TextStyle(
-                        fontSize: 14,
+                        fontSize: 12,
                       ),
                     ),
                     title: Text(
@@ -69,7 +69,7 @@ class _UserPageState extends State<UserPage> {
                           '/' +
                           snapshot.data!.docs[index].get('sum').toString() + ' руб.',
                       style: const TextStyle(
-                        fontSize: 14,
+                        fontSize: 12,
                       ),
                     ),
                     subtitle: Text(

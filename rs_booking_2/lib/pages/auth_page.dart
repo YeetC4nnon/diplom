@@ -41,9 +41,6 @@ class _AuthorizationPageState extends State<AuthorizationPage> {
           email: _emailController.text.trim(),
           password: _passwordController.text.trim(),
         );
-        updateState() {
-          isUser;
-        }
 
         // Создаем новый документ в коллекции 'users'
         final newUserRef = usersRef.doc(userCredential.user!.uid);
@@ -114,9 +111,6 @@ class _AuthorizationPageState extends State<AuthorizationPage> {
           email: _emailController.text.trim(),
           password: _passwordController.text.trim(),
         );
-        updateState() {
-          isUser;
-        }
       } on FirebaseAuthException catch (e) {
         if (e.code == 'user-not-found' || e.code == 'wrong-password') {
           SnackBarService.showSnackBar(
@@ -258,7 +252,6 @@ class _AuthorizationPageState extends State<AuthorizationPage> {
                         onTap: () {
                           setState(() {
                             showLogin = false;
-                            isUser;
                           });
                           if (isUser != null) {
                             Navigator.of(context).pushNamed('HomePage');
@@ -281,7 +274,6 @@ class _AuthorizationPageState extends State<AuthorizationPage> {
                         onTap: () {
                           setState(() {
                             showLogin = true;
-                            isUser;
                           });
                           if (isUser != null) {
                             Navigator.of(context).pushNamed('HomePage');

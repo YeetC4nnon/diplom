@@ -334,7 +334,7 @@ class _RecordPageState extends State<RecordPage> {
                     ),
                     DropdownButton(
                       dropdownColor: Colors.blue,
-                      hint: dropDownValue == null
+                      hint: dropDownValue == ''
                           ? const Text('Выберите время')
                           : Text(
                               dropDownValue,
@@ -412,12 +412,21 @@ class _RecordPageState extends State<RecordPage> {
                               }
                             }
                             if (isCompared == true) {
+                              if (dropDownValue != '') {
+                                SnackBarService.showSnackBar(
+                                  context,
+                                  'Успешно арендовано! С Вами свяжется сотрудник по почте.',
+                                  false,
+                                );
+                                createRecord(record);
+                              }
+                            }
+                            if (dropDownValue == '') {
                               SnackBarService.showSnackBar(
                                 context,
-                                'Успешно арендовано! С Вами свяжется сотрудник по почте.',
-                                false,
+                                'Выберите время аренды',
+                                true,
                               );
-                              createRecord(record);
                             }
                             if (isCompared == false) {
                               SnackBarService.showSnackBar(
@@ -426,9 +435,6 @@ class _RecordPageState extends State<RecordPage> {
                                 true,
                               );
                             }
-                            /*if (selectedDate < DateTime.now()) {
-
-                            }*/
                           }),
                           child: const Text('Арендовать'),
                         ),
@@ -451,7 +457,7 @@ Future createRecord(Record record) async {
 
 class Tariffs {
   final String tariff_title;
-  final double tariff_cost;
+  final int tariff_cost;
   final String tariff_type;
 
   Tariffs({
