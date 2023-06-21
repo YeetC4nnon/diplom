@@ -247,6 +247,7 @@ class _RecordPageState extends State<RecordPage> {
                       return Text(snapshot.error.toString());
                     } else if (snapshot.hasData) {
                       return ListView.separated(
+                        physics: const NeverScrollableScrollPhysics(),
                         shrinkWrap: true,
                         itemCount: snapshot.data!.docs.length,
                         separatorBuilder: (BuildContext context, int index) =>
